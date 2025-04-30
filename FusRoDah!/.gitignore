@@ -1,0 +1,28 @@
+# Archivos de MetaTrader
+*.ex5
+*.log
+*.set
+*.hst
+*.dat
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de compilación
+*.o
+*.obj
+*.tmp
+*.bak
+
+# Carpetas de compilación de MetaTrader
+/MQL5/Experts/
+/MQL5/Files/
+/MQL5/Logs/
+
+# Archivos sensibles
+*.env
+
+
+
+
