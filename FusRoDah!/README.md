@@ -1,6 +1,6 @@
 # FusRoDah!
 
-![FusRoDah! Logo](images/FusRoDah!.png)
+![FusRoDah! Logo](images/FusRoDah!_logo.png)
 
 **FusRoDah!** es un **Expert Advisor (EA)** desarrollado para **MetaTrader 5**, diseñado para operar en **índices americanos** (US100, US500, US30, etc.) en el marco temporal de **1 hora (H1)**. Este bot automatiza operaciones basadas en **rupturas de rangos** definidos en ventanas horarias configurables, con una estrategia optimizada para capturar movimientos direccionales y una gestión de riesgo robusta, especialmente alineada con los requisitos de desafíos de fondeo como **FTMO**.
 
