@@ -102,7 +102,8 @@ Esta gestión de riesgo asegura que **Tokyo Breakers** sea compatible con las re
 
 ## 📊 Resultados de Simulación
 
-**Tokyo Breakers** ha sido evaluado con datos reales en MetaTrader 5 usando una simulación con parámetros optimizados:
+**Tokyo Breakers** ha sido evaluado con datos reales en MetaTrader 5 usando una simulación con parámetros optimizados. Consulta los detalles, incluyendo el reporte HTML y los gráficos de rendimiento, en:  
+- **[Resultados Detallados de Simulación](Simulaciones%20y%20optimizaciones/README.md)**
 
 ## ⚙ Instalación
 
