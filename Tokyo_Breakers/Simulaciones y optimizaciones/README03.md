@@ -1,6 +1,6 @@
-# 📈 Simulación Optimizada: 01-01-2023 a 30-04-2025
+# 📈 Simulación Optimizada: 01-01-2025 a 30-04-2025
 
-Esta simulación fue realizada para el Expert Advisor **Tokyo_Breakers** en MetaTrader 5, utilizando datos históricos del par **USDJPY** desde el **1 de enero de 2023** hasta el **30 de abril de 2025**. Los parámetros fueron optimizados para maximizar el rendimiento mientras se controla el riesgo, logrando un equilibrio entre rentabilidad y estabilidad.
+Esta simulación fue realizada para el Expert Advisor **Tokyo_Breakers** en MetaTrader 5, utilizando datos históricos del par **USDJPY** desde el **1 de enero de 2025** hasta el **30 de abril de 2025**. Los parámetros fueron optimizados para maximizar el rendimiento mientras se controla el riesgo, logrando un equilibrio entre rentabilidad y estabilidad.
 
 ---
 
@@ -9,7 +9,7 @@ Esta simulación fue realizada para el Expert Advisor **Tokyo_Breakers** en Meta
 - **Informe del Probador de Estrategias**: FTMO-Server5 (Build 4755)
 - **Experto**: Tokyo_Breakers
 - **Símbolo**: USDJPY
-- **Período**: H1 (2023.01.01 - 2025.04.30)
+- **Período**: H1 (2025.01.01 - 2025.04.30)
 - **Empresa**: FTMO Global Markets Ltd
 - **Divisa**: USD
 - **Depósito inicial**: 10,000.00 USD
@@ -29,7 +29,7 @@ Esta simulación fue realizada para el Expert Advisor **Tokyo_Breakers** en Meta
 | `TrailingStopStep`          | Paso del trailing stop en puntos                          | 15                |
 | `MaxPositions`              | Máximo de operaciones abiertas por dirección              | 2                 |
 | `CandleSeparation`          | Velas mínimas entre operaciones nuevas                    | 2                 |
-| `UseBalanceTarget`          | Activar objetivo de balance                               | false             |
+| `UseBalanceTarget`          | Activar objetivo de balance                               | true              |
 | `BalanceTarget`             | Objetivo de balance para cerrar el bot                    | 11000.0           |
 | `MinOperatingBalance`       | Balance mínimo para operar                                | 9050.0            |
 | `MaxDailyLossFTMO`          | Pérdida diaria máxima permitida                           | 500.0             |
@@ -48,49 +48,49 @@ Esta simulación fue realizada para el Expert Advisor **Tokyo_Breakers** en Meta
 
 | Métrica                          | Valor              |
 |----------------------------------|--------------------|
-| **Calidad del historial**        | 23%               |
-| **Barras**                       | 9,673             |
-| **Ticks**                        | 34,809,890        |
+| **Calidad del historial**        | 100%              |
+| **Barras**                       | 2,016             |
+| **Ticks**                        | 8,365,506         |
 | **Símbolos**                     | 1                 |
-| **Beneficio Neto**               | 27,367.49 USD     |
-| **Beneficio Bruto**              | 56,088.22 USD     |
-| **Pérdidas Brutas**              | -28,720.73 USD    |
-| **Factor de Beneficio**          | 1.95              |
-| **Beneficio Esperado**           | 9.69 USD          |
-| **Factor de Recuperación**       | 34.57             |
-| **Ratio de Sharpe**              | 13.79             |
-| **Z-Score**                      | -2.94 (99.67%)    |
-| **AHPR**                         | 1.0005 (0.05%)    |
-| **GHPR**                         | 1.0005 (0.05%)    |
-| **Reducción absoluta del balance** | 105.94 USD      |
-| **Reducción absoluta de la equidad** | 100.43 USD    |
-| **Reducción máxima del balance** | 783.92 USD (2.11%) |
-| **Reducción máxima de la equidad** | 791.55 USD (2.13%) |
-| **Reducción relativa del balance** | 2.66% (344.73 USD) |
-| **Reducción relativa de la equidad** | 2.74% (355.74 USD) |
-| **Nivel de margen**              | 249.36%           |
-| **LR Correlation**               | 0.97              |
-| **LR Standard Error**            | 2,300.60          |
+| **Beneficio Neto**               | 1,033.94 USD      |
+| **Beneficio Bruto**              | 6,828.26 USD      |
+| **Pérdidas Brutas**              | -5,794.32 USD     |
+| **Factor de Beneficio**          | 1.18              |
+| **Beneficio Esperado**           | 1.71 USD          |
+| **Factor de Recuperación**       | 1.97              |
+| **Ratio de Sharpe**              | 3.43              |
+| **Z-Score**                      | 0.21 (16.63%)     |
+| **AHPR**                         | 1.0002 (0.02%)    |
+| **GHPR**                         | 1.0002 (0.02%)    |
+| **Reducción absoluta del balance** | 355.00 USD      |
+| **Reducción absoluta de la equidad** | 356.52 USD    |
+| **Reducción máxima delVuelve a la derecha del balance** | 518.59 USD (4.87%) |
+| **Reducción máxima de la equidad** | 525.26 USD (4.93%) |
+| **Reducción relativa del balance** | 4.87% (518.59 USD) |
+| **Reducción relativa de la equidad** | 4.93% (525.26 USD) |
+| **Nivel de margen**              | 484.97%           |
+| **LR Correlation**               | 0.83              |
+| **LR Standard Error**            | 168.43            |
 | **Resultado de OnTester**        | 0                 |
 
 ### Estadísticas de Operaciones
 
 | Métrica                                   | Valor              |
 |-------------------------------------------|--------------------|
-| **Total de operaciones ejecutadas**       | 2,825             |
-| **Total de transacciones**                | 5,650             |
-| **Posiciones rentables (% del total)**    | 2,465 (87.26%)    |
-| **Posiciones no rentables (% del total)** | 360 (12.74%)      |
-| **Posiciones cortas (% rentables)**       | 1,324 (87.24%)    |
-| **Posiciones largas (% rentables)**       | 1,501 (87.28%)    |
-| **Transacción rentable promedio**         | 22.75 USD         |
-| **Transacción no rentable promedio**      | -76.25 USD        |
-| **Transacción rentable máxima**           | 95.20 USD         |
+| **Total de operaciones ejecutadas**       | 604               |
+| **Total de transacciones**                | 1,208             |
+| **Posiciones rentables (% del total)**    | 529 (87.58%)      |
+| **Posiciones no rentables (% del total)** | 75 (12.42%)       |
+| **Posiciones cortas (% rentables)**       | 329 (88.45%)      |
+| **Posiciones largas (% rentables)**       | 275 (86.55%)      |
+| **Transacción rentable promedio**         | 12.91 USD         |
+| **Transacción no rentable promedio**      | -73.63 USD        |
+| **Transacción rentable máxima**           | 70.17 USD         |
 | **Transacción no rentable máxima**        | -111.19 USD       |
-| **Máximo de ganancias consecutivas**      | 41 (846.91 USD)   |
-| **Máximo de pérdidas consecutivas**       | 4 (-264.87 USD)   |
-| **Máximo de beneficio consecutivo**       | 1,349.36 USD (35) |
-| **Máximo de pérdidas consecutivas**       | -264.87 USD (4)   |
+| **Máximo de ganancias consecutivas**      | 24 (333.84 USD)   |
+| **Máximo de pérdidas consecutivas**       | 3 (-164.66 USD)   |
+| **Máximo de beneficio consecutivo**       | 405.79 USD (20)   |
+| **Máximo de pérdidas consecutivas**       | -195.27 USD (2)   |
 | **Promedio de ganancias consecutivas**    | 8                 |
 | **Promedio de pérdidas consecutivas**     | 1                 |
 
@@ -98,11 +98,11 @@ Esta simulación fue realizada para el Expert Advisor **Tokyo_Breakers** en Meta
 
 ## 📉 Gráfico de Rendimiento
 
-![Gráfico General](ReportTester-550097663.png)
+![Gráfico General](ReportTester-550097664.png)
 
 ---
 
 ## ⚠️ Notas y Advertencia
 
 - Esta simulación se realizó después de un proceso de optimización de parámetros.
-- **Advertencia**: Aunque la optimización mejora el rendimiento, al estar concentrada en un período de apenas dos años y medio (01-01-2023 a 30-04-2025), puede haber cierta **sobreoptimización**. Esto significa que los resultados podrían no ser completamente representativos de condiciones futuras del mercado. Se recomienda realizar pruebas adicionales en períodos más amplios o en condiciones de mercado en vivo para validar la robustez de la estrategia.
+- **Advertencia**: Aunque la optimización mejora el rendimiento, al estar concentrada en un período de apenas cuatro meses (01-01-2025 a 30-04-2025), puede haber cierta **sobreoptimización**. Esto significa que los resultados podrían no ser completamente representativos de condiciones futuras del mercado. Se recomienda realizar pruebas adicionales en períodos más amplios o en condiciones de mercado en vivo para validar la robustez de la estrategia.
