@@ -106,4 +106,3 @@ Esta simulación fue realizada para el Expert Advisor **Tokyo_Breakers** en Meta
 
 - Esta simulación se realizó después de un proceso de optimización de parámetros.
 - **Advertencia**: Aunque la optimización mejora el rendimiento, al estar concentrada en un período de apenas dos años y medio (01-01-2023 a 30-04-2025), puede haber cierta **sobreoptimización**. Esto significa que los resultados podrían no ser completamente representativos de condiciones futuras del mercado. Se recomienda realizar pruebas adicionales en períodos más amplios o en condiciones de mercado en vivo para validar la robustez de la estrategia.
-- Asegúrate de que el archivo de la imagen esté en esta carpeta para que se muestre correctamente.
