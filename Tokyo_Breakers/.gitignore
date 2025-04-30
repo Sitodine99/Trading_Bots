@@ -1,0 +1,12 @@
+# Archivos de MetaTrader
+*.ex5
+*.log
+*.set
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de compilación
+*.o
+*.obj
