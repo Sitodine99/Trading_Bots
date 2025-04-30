@@ -1,17 +1,10 @@
 # Tokyo Breakers
 
-<table style="width:100%;">
-  <tr>
-    <td style="width:30%; vertical-align:top;">
-      <img src="images/Tokyo_Breakers_logo.png" alt="Tokyo Breakers Logo" style="width:50%;" />
-    </td>
-    <td style="width:70%; vertical-align:top;">
-      **Tokyo Breakers** es un **Expert Advisor (EA)** desarrollado para **MetaTrader 5**, diseñado exclusivamente para operar en el par **USDJPY** en el marco temporal de **1 hora (H1)**. Este bot automatiza operaciones basadas en **rupturas de Bandas de Bollinger**, con una estrategia optimizada para capturar movimientos de alta volatilidad y una gestión de riesgo robusta, especialmente alineada con los requisitos de desafíos de fondeo como **FTMO**.
+![Tokyo Breakers Logo](images/Tokyo_Breakers_logo.png)
 
-      El EA incorpora herramientas avanzadas de gestión de capital, incluyendo **Stop Loss**, **Take Profit**, **Trailing Stop**, límites de **pérdida diaria**, y un sistema de **multiplicador de contratos** para maximizar el rendimiento tras operaciones ganadoras. Su diseño busca equilibrar rentabilidad y control de riesgo, respetando las reglas estrictas de los programas de fondeo.
-    </td>
-  </tr>
-</table>
+**Tokyo Breakers** es un **Expert Advisor (EA)** desarrollado para **MetaTrader 5**, diseñado exclusivamente para operar en el par **USDJPY** en el marco temporal de **1 hora (H1)**. Este bot automatiza operaciones basadas en **rupturas de Bandas de Bollinger**, con una estrategia optimizada para capturar movimientos de alta volatilidad y una gestión de riesgo robusta, especialmente alineada con los requisitos de desafíos de fondeo como **FTMO**.
+
+El EA incorpora herramientas avanzadas de gestión de capital, incluyendo **Stop Loss**, **Take Profit**, **Trailing Stop**, límites de **pérdida diaria**, y un sistema de **multiplicador de contratos** para maximizar el rendimiento tras operaciones ganadoras. Su diseño busca equilibrar rentabilidad y control de riesgo, respetando las reglas estrictas de los programas de fondeo.
 
 ---
 
