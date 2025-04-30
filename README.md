@@ -8,7 +8,7 @@ Bots de trading automatizados en MQL5 para MetaTrader 5 (MT5). Contiene expertos
 
 | Imagen del Bot | Nombre del Bot | Descripción Breve |
 |----------------|----------------|-------------------|
-| ![Tokyo_Breakers](Tokyo_Breakers/images/Tokyo_Breakers_logo.png) | [**Tokyo_Breakers**](Tokyo_Breakers/README.md) | EA para trading basado en rupturas de precio durante la sesión de Tokio. |
+| <img src="Tokyo_Breakers/images/Tokyo_Breakers_logo.png" style="width:50%"/> | [**Tokyo_Breakers**](Tokyo_Breakers/README.md) | EA para trading basado en rupturas de precio durante la sesión de Tokio. |
 
 ---
 
