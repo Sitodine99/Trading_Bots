@@ -106,3 +106,4 @@ Esta simulaci車n fue realizada para el Expert Advisor **Tokyo_Breakers** en Meta
 
 - Esta simulaci車n se realiz車 despu谷s de un proceso de optimizaci車n de par芍metros.
 - **Advertencia**: Aunque la optimizaci車n mejora el rendimiento, al estar concentrada en un per赤odo de apenas dos a?os y medio (01-01-2023 a 30-04-2025), puede haber cierta **sobreoptimizaci車n**. Esto significa que los resultados podr赤an no ser completamente representativos de condiciones futuras del mercado. Se recomienda realizar pruebas adicionales en per赤odos m芍s amplios o en condiciones de mercado en vivo para validar la robustez de la estrategia.
+- Aseg迆rate de que el archivo de la imagen est谷 en esta carpeta para que se muestre correctamente.
