@@ -1,8 +1,12 @@
 # Tokyo Breakers
 
-<div style="text-align:center;">
-  <img src="images/Tokyo_Breakers_logo.png" alt="Tokyo Breakers Logo" style="width:50%; display:block; margin:0 auto;" />
-</div>
+<table style="width:100%;">
+  <tr>
+    <td style="text-align:center;">
+      <img src="images/Tokyo_Breakers_logo.png" alt="Tokyo Breakers Logo" style="width:50%;" />
+    </td>
+  </tr>
+</table>
 
 **Tokyo Breakers** es un **Expert Advisor (EA)** desarrollado para **MetaTrader 5**, diseñado exclusivamente para operar en el par **USDJPY** en el marco temporal de **1 hora (H1)**. Este bot automatiza operaciones basadas en **rupturas de Bandas de Bollinger**, con una estrategia optimizada para capturar movimientos de alta volatilidad y una gestión de riesgo robusta, especialmente alineada con los requisitos de desafíos de fondeo como **FTMO**.
 
