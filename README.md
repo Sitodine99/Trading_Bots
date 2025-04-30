@@ -6,14 +6,14 @@ Bots de trading automatizados en MQL5 para MetaTrader 5 (MT5). Contiene expertos
 
 ## Bots Disponibles
 
-<table>
+<table style="table-layout:fixed; width:100%;">
   <tr>
-    <th style="text-align:center; width:180px">Bot</th>
-    <th style="text-align:center; width:180px">Nombre</th>
-    <th style="text-align:center; width:400px">Descripción</th>
+    <th style="text-align:center; width:180px; min-width:180px; max-width:180px;">Bot</th>
+    <th style="text-align:center; width:180px; min-width:180px; max-width:180px;">Nombre</th>
+    <th style="text-align:center; width:500px; min-width:500px;">Descripción</th>
   </tr>
   <tr>
-    <td style="text-align:center"><img src="Tokyo_Breakers/images/Tokyo_Breakers_logo.png" style="width:180px"/></td>
+    <td style="text-align:center"><img src="Tokyo_Breakers/images/Tokyo_Breakers_logo.png" style="width:180px; min-width:180px; max-width:180px;"/></td>
     <td style="text-align:center"><a href="Tokyo_Breakers/README.md"><b>Tokyo_Breakers</b></a></td>
     <td style="text-align:center">Expert Advisor para MetaTrader 5 que opera en USDJPY diseñado para ejecutar operaciones automáticas basadas en <b>rupturas de Bandas de Bollinger</b>.</td>
   </tr>
