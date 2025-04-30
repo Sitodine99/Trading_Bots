@@ -18,7 +18,7 @@ Bots de trading automatizados en MQL5 para MetaTrader 5 (MT5). Contiene expertos
     <td style="text-align:center">Expert Advisor para MetaTrader 5 que opera en USDJPY diseñado para ejecutar operaciones automáticas basadas en <b>rupturas de Bandas de Bollinger</b>.</td>
   </tr>
   <tr>
-    <td style="text-align:center"><img src="FusoDah/images/FusoDah_logo.png" style="width:180px; min-width:180px; max-width:180px;"/></td>
+    <td style="text-align:center"><img src="FusRoDah!/images/FusRoDah!_logo.png" style="width:180px; min-width:180px; max-width:180px;"/></td>
     <td style="text-align:center"><a href="FusRoDah!/README.md"><b>FusRoDah!</b></a></td>
     <td style="text-align:center">Expert Advisor para MetaTrader 5 que opera en USDJPY diseñado para ejecutar operaciones automáticas basadas en <b>rupturas de niveles de soporte y resistencia</b>.</td>
   </tr>
