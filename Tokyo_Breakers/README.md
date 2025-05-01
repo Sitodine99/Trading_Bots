@@ -22,28 +22,19 @@ El EA incorpora herramientas avanzadas de gestión de capital, incluyendo **Stop
 
 ## 🚀 Estrategia de Trading
 
-**Tokyo_Breakers** es un Expert Advisor (EA) diseñado para operar en el par **USDJPY** en MetaTrader 5, aprovechando movimientos direccionales fuertes mediante una estrategia de **seguimiento de tendencia** basada en las **Bandas de Bollinger**. A diferencia de las estrategias tradicionales que buscan retrocesos tras rupturas (reversión a la media), este EA capitaliza la volatilidad y el momentum del mercado, entrando en operaciones en la dirección de la ruptura. Esto lo hace ideal para capturar tendencias durante sesiones de alta actividad, como la sesión asiática (de ahí su nombre "Tokyo_Breakers").
+**Tokyo Breakers** es un Expert Advisor (EA) para MetaTrader 5 que opera en el par USDJPY en el timeframe H1. Utiliza una estrategia de seguimiento de tendencia basada en Bandas de Bollinger para capturar movimientos direccionales fuertes durante sesiones de alta volatilidad, como la asiática. A diferencia de estrategias de reversión a la media que buscan retrocesos, este EA entra en operaciones en la dirección de la ruptura para aprovechar el momentum.
 
 ### Lógica Principal
-El EA utiliza las **Bandas de Bollinger** (con un período configurable `BB_Period` y una desviación `BB_Deviation`) en un timeframe de **H1** para identificar momentos de alta volatilidad en USDJPY. Las Bandas de Bollinger miden la volatilidad del mercado: cuando el precio cruza las bandas superior o inferior, indica un posible movimiento direccional fuerte. La estrategia principal del EA se basa en rupturas de la vela anterior:
+El EA emplea **Bandas de Bollinger** (período y desviación configurables) en H1 para detectar alta volatilidad. Cuando el precio cruza las bandas superior o inferior, indica un movimiento direccional fuerte. La estrategia se basa en la ruptura de la vela anterior:
+- **Compra**: Si la vela anterior cierra por encima de la banda superior, el EA abre una posición de compra, anticipando continuación alcista.
+- **Venta**: Si cierra por debajo de la banda inferior, abre una venta, esperando un movimiento bajista.
+- **Razonamiento**: Una ruptura de las Bandas de Bollinger en USDJPY, especialmente en la sesión asiática, señala momentum fuerte. El EA capitaliza la tendencia sin esperar retrocesos.
+- **Filtros**: Mínimo de velas entre operaciones (`CandleSeparation`) y máximo de posiciones por dirección (`MaxPositions`) para evitar sobreoperar y controlar el riesgo.
 
-#### Ruptura de Vela Anterior (Modo Principal)
-- **Condición de Entrada**:
-  - **Compra**: Si la vela anterior cierra **por encima** de la banda superior de Bollinger, el EA abre una posición de compra, anticipando que el movimiento alcista continuará.
-  - **Venta**: Si la vela anterior cierra **por debajo** de la banda inferior de Bollinger, el EA abre una posición de venta, esperando una continuación bajista.
-- **Razonamiento**: Este modo asume que una ruptura de las Bandas de Bollinger en USDJPY, especialmente durante la sesión asiática, indica un momentum direccional fuerte. En lugar de esperar un retroceso (como en estrategias de reversión), el EA busca capitalizar la tendencia inmediatamente después de la ruptura.
-- **Filtros**:
-  - **Separación entre operaciones**: El EA espera un número mínimo de velas (`CandleSeparation`) entre operaciones para evitar sobreoperar.
-  - **Límite de posiciones**: Restringe el número máximo de posiciones abiertas por dirección (`MaxPositions`) para controlar la exposición al riesgo.
-
-#### Condición Adicional: Ruptura en Tiempo Real (`UseBreakoutDistance = true`)
-- **Funcionalidad Extra**: Si el parámetro `UseBreakoutDistance` está activado, el EA añade una condición adicional para operar en tiempo real, además de la lógica de ruptura de vela anterior.
-- **Condición de Entrada**:
-  - **Compra**: Si el precio actual (en tiempo real) supera la banda superior de Bollinger por una distancia definida (`BreakoutDistancePoints`), el EA abre una posición de compra.
-  - **Venta**: Si el precio actual cae por debajo de la banda inferior de Bollinger por la misma distancia, el EA abre una posición de venta.
-- **Razonamiento**: Esta funcionalidad permite capturar rupturas explosivas en tiempo real, como las que ocurren tras eventos de noticias o durante sesiones de alta volatilidad. La distancia de ruptura (`BreakoutDistancePoints`) actúa como un filtro para confirmar que el movimiento es significativo y no una falsa ruptura. Esto complementa el modo principal, permitiendo al EA reaccionar más rápido a movimientos fuertes.
-- **Filtros**:
-  - Igual que en el modo principal: separación mínima entre operaciones (`CandleSeparation`) y límite de posiciones por dirección (`MaxPositions`).
+### Opción Adicional (UseBreakoutDistance)
+Si se activa (`UseBreakoutDistance`) el EA no esperará al cierre de la vela para abrir la operación, sino que abrirá una compra si el precio actual supera la banda superior por una distancia definida (`BreakoutDistancePoints`), o una venta si cae por debajo de la banda inferior por esa distancia.
+- **Razonamiento**: Esto permite capturar rupturas explosivas (ej., por noticias), usando (`BreakoutDistancePoints`) como filtro para evitar falsas rupturas.
+- **Filtros**: Aplica las mismas restricciones de separación entre operaciones y límite de posiciones.
 
 ### Gestión de Operaciones y Riesgo
 **Tokyo_Breakers** incluye varias herramientas para gestionar las operaciones y controlar el riesgo, asegurando un trading disciplinado:
