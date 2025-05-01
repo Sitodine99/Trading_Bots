@@ -22,7 +22,7 @@ El EA incorpora herramientas avanzadas de gestión de capital, incluyendo **Stop
 
 ## 🚀 Estrategia de Trading
 
-**Tokyo Breakers** es un Expert Advisor (EA) para MetaTrader 5 que opera en el par USDJPY en el timeframe H1. Utiliza una estrategia de seguimiento de tendencia basada en Bandas de Bollinger para capturar movimientos direccionales fuertes durante sesiones de alta volatilidad, como la asiática. A diferencia de estrategias de reversión a la media que buscan retrocesos, este EA entra en operaciones en la dirección de la ruptura para aprovechar el momentum.
+**Tokyo Breakers** es un Expert Advisor (EA) para MetaTrader 5 que opera en el par **USDJPY** en el timeframe H1. Utiliza una estrategia de seguimiento de tendencia basada en **Bandas de Bollinger** para capturar movimientos direccionales fuertes durante sesiones de alta volatilidad, como la asiática. A diferencia de estrategias de reversión a la media que buscan retrocesos, este EA entra en operaciones en la dirección de la ruptura para aprovechar el momentum.
 
 ### Lógica Principal
 El EA emplea **Bandas de Bollinger** (período y desviación configurables) en H1 para detectar alta volatilidad. Cuando el precio cruza las bandas superior o inferior, indica un movimiento direccional fuerte. La estrategia se basa en la ruptura de la vela anterior:
