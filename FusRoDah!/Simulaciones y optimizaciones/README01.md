@@ -1,6 +1,6 @@
 # 📈 Simulación Optimizada: 01-01-2025 a 30-04-2025
 
-Esta simulación fue realizada para el Expert Advisor **FusRoDah! v03** en MetaTrader 5, utilizando datos históricos del índice **US100.cash** desde el **1 de enero de 2025** hasta el **30 de abril de 2025**. Los parámetros fueron optimizados para maximizar el rendimiento mientras se controla el riesgo, logrando un equilibrio entre rentabilidad y estabilidad.
+Esta simulación fue realizada para el Expert Advisor **FusRoDah! v03** en MetaTrader 5, utilizando datos históricos del índice **US100.cash** desde el **1 de enero de 2025** hasta el **30 de abril de 2025**. Los parámetros fueron optimizados para maximizar el rendimiento mientras se controla el riesgo, con un enfoque en permitir múltiples operaciones simultáneas para una estrategia más agresiva, manteniendo un equilibrio entre rentabilidad y estabilidad.
 
 ---
 
@@ -35,6 +35,7 @@ Esta simulación fue realizada para el Expert Advisor **FusRoDah! v03** en MetaT
 | `USAR_TRAILING_STOP`        | Activar/desactivar Trailing Stop                          | true              |
 | `PUNTOS_ACTIVACION_TRAILING`| Puntos de beneficio para activar trailing stop            | 6000              |
 | `PASO_TRAILING_STOP`        | Paso en puntos para ajustar el trailing stop              | 1500              |
+| `PERMITIR_OPERACIONES_MULTIPLES` | Permitir múltiples operaciones simultáneas            | true              |
 | `USAR_OBJETIVO_SALDO`       | Activar/desactivar objetivo de saldo                      | false             |
 | `OBJETIVO_SALDO`            | Saldo objetivo para cerrar el bot (USD)                   | 11000.0           |
 | `SALDO_MINIMO_OPERATIVO`    | Saldo mínimo operativo (USD)                              | 9050.0            |
@@ -84,10 +85,10 @@ Esta simulación fue realizada para el Expert Advisor **FusRoDah! v03** en MetaT
 | **Posiciones no rentables (% del total)** | 43 (22.99%)       |
 | **Posiciones cortas (% rentables)**       | 89 (76.40%)       |
 | **Posiciones largas (% rentables)**       | 98 (77.55%)       |
-| **Transacción rentable promedio**         | 73.58 USD         |
-| **Transacción no rentable promedio**      | -173.32 USD       |
 | **Transacción rentable máxima**           | 161.38 USD        |
 | **Transacción no rentable máxima**        | -190.47 USD       |
+| **Transacción rentable promedio**         | 73.58 USD         |
+| **Transacción no rentable promedio**      | -173.32 USD       |
 | **Máximo de ganancias consecutivas**      | 11 (628.74 USD)   |
 | **Máximo de pérdidas consecutivas**       | 3 (-496.43 USD)   |
 | **Máximo de beneficio consecutivo**       | 698.28 USD (7)    |
@@ -99,12 +100,12 @@ Esta simulación fue realizada para el Expert Advisor **FusRoDah! v03** en MetaT
 
 ## 📉 Gráfico de Rendimiento
 
-![Gráfico General](ReportTester-550097663(2).png)
+![Gráfico General](ReportTester-550097663.png)
 
 ---
 
 ## ⚠️ Notas y Advertencia
 
-- Esta simulación se realizó después de un proceso de optimización de parámetros.
-- **Advertencia**: Aunque la calidad del historial es del 100%, la simulación abarca un período de 4 meses (01-01-2025 a 30-04-2025), lo que podría limitar la representatividad de los resultados en condiciones de mercado más amplias o variables. Se recomienda realizar pruebas adicionales en períodos más largos o en condiciones de mercado en vivo para validar la robustez de la estrategia.
-- **Nota sobre el Drawdown**: El drawdown del balance (9.72%, 1,258.14 USD) y de la equidad (9.71%, 1,254.47 USD) están dentro del límite típico de 10% (1,000 USD) permitido en pruebas de fondeo como FTMO. Esta configuración cumple con las reglas de fondeo (saldo mínimo de 9,000 USD, pérdida diaria máxima de 500 USD) y es adecuada para pruebas de fondeo con un objetivo de beneficio de 1,000 USD.
+- Esta simulación se realizó después de un proceso de optimización de parámetros, incluyendo la activación de `PERMITIR_OPERACIONES_MULTIPLES=true`, lo que permite una estrategia más agresiva al abrir múltiples operaciones simultáneas.
+- **Advertencia**: Aunque la optimización mejora el rendimiento, al estar concentrada en un período corto de cuatro meses (01-01-2025 a 30-04-2025), puede haber cierta **sobreoptimización**. La estrategia con múltiples operaciones simultáneas aumenta el riesgo de exposición, especialmente en mercados volátiles. Se recomienda realizar pruebas adicionales en períodos más amplios o en condiciones de mercado en vivo para validar la robustez de la estrategia.
+- **Gestión de riesgos**: Asegúrese de ajustar parámetros como `LOTE_FIJO`, `PERDIDA_DIARIA_MAXIMA` y `SALDO_MINIMO_OPERATIVO` según el tamaño de su cuenta y tolerancia al riesgo, especialmente con múltiples operaciones activas.

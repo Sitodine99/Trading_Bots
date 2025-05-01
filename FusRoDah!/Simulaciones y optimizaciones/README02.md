@@ -1,6 +1,6 @@
 # 📈 Simulación Optimizada: 01-01-2023 a 30-04-2025
 
-Esta simulación fue realizada para el Expert Advisor **FusRoDah! v03** en MetaTrader 5, utilizando datos históricos del índice **US100.cash** desde el **1 de enero de 2023** hasta el **30 de abril de 2025**. Los parámetros fueron optimizados para maximizar el rendimiento mientras se controla el riesgo, logrando un equilibrio entre rentabilidad y estabilidad.
+Esta simulación fue realizada para el Expert Advisor **FusRoDah! v03** en MetaTrader 5, utilizando datos históricos del índice **US100.cash** desde el **1 de enero de 2023** hasta el **30 de abril de 2025**. Los parámetros fueron optimizados para maximizar el rendimiento mientras se controla el riesgo, con un enfoque en permitir múltiples operaciones simultáneas para una estrategia más agresiva, manteniendo un equilibrio entre rentabilidad y estabilidad.
 
 ---
 
@@ -35,6 +35,7 @@ Esta simulación fue realizada para el Expert Advisor **FusRoDah! v03** en MetaT
 | `USAR_TRAILING_STOP`        | Activar/desactivar Trailing Stop                          | true              |
 | `PUNTOS_ACTIVACION_TRAILING`| Puntos de beneficio para activar trailing stop            | 6000              |
 | `PASO_TRAILING_STOP`        | Paso en puntos para ajustar el trailing stop              | 1500              |
+| `PERMITIR_OPERACIONES_MULTIPLES` | Permitir múltiples operaciones simultáneas            | true              |
 | `USAR_OBJETIVO_SALDO`       | Activar/desactivar objetivo de saldo                      | false             |
 | `OBJETIVO_SALDO`            | Saldo objetivo para cerrar el bot (USD)                   | 11000.0           |
 | `SALDO_MINIMO_OPERATIVO`    | Saldo mínimo operativo (USD)                              | 9050.0            |
@@ -53,39 +54,39 @@ Esta simulación fue realizada para el Expert Advisor **FusRoDah! v03** en MetaT
 | **Barras**                       | 9,428             |
 | **Ticks**                        | 48,287,127        |
 | **Símbolos**                     | 1                 |
-| **Beneficio Neto**               | 9,191.09 USD      |
-| **Beneficio Bruto**              | 54,801.90 USD     |
-| **Pérdidas Brutas**              | -45,610.81 USD    |
+| **Beneficio Neto**               | 8,896.55 USD      |
+| **Beneficio Bruto**              | 54,040.15 USD     |
+| **Pérdidas Brutas**              | -45,143.60 USD    |
 | **Factor de Beneficio**          | 1.20              |
-| **Beneficio Esperado**           | 9.59 USD          |
-| **Factor de Recuperación**       | 5.44              |
-| **Ratio de Sharpe**              | 2.98              |
-| **Z-Score**                      | -1.22 (77.75%)    |
+| **Beneficio Esperado**           | 9.35 USD          |
+| **Factor de Recuperación**       | 5.26              |
+| **Ratio de Sharpe**              | 2.95              |
+| **Z-Score**                      | -1.44 (85.01%)    |
 | **AHPR**                         | 1.0007 (0.07%)    |
 | **GHPR**                         | 1.0007 (0.07%)    |
 | **Reducción absoluta del balance** | 941.98 USD      |
 | **Reducción absoluta de la equidad** | 800.49 USD    |
-| **Reducción máxima del balance** | 1,569.40 USD (11.38%) |
-| **Reducción máxima de la equidad** | 1,690.98 USD (12.06%) |
+| **Reducción máxima del balance** | 1,569.40 USD (11.36%) |
+| **Reducción máxima de la equidad** | 1,690.98 USD (12.03%) |
 | **Reducción relativa del balance** | 11.81% (1,213.46 USD) |
-| **Reducción relativa de la equidad** | 12.06% (1,690.98 USD) |
-| **Nivel de margen**              | 116.33%           |
+| **Reducción relativa de la equidad** | 12.03% (1,690.98 USD) |
+| **Nivel de margen**              | 118.00%           |
 | **LR Correlation**               | 0.94              |
-| **LR Standard Error**            | 953.77            |
+| **LR Standard Error**            | 913.53            |
 | **Resultado de OnTester**        | 0                 |
 
 ### Estadísticas de Operaciones
 
 | Métrica                                   | Valor              |
 |-------------------------------------------|--------------------|
-| **Total de operaciones ejecutadas**       | 958               |
-| **Total de transacciones**                | 1,916             |
-| **Posiciones rentables (% del total)**    | 668 (69.73%)      |
-| **Posiciones no rentables (% del total)** | 290 (30.27%)      |
-| **Posiciones cortas (% rentables)**       | 453 (65.78%)      |
-| **Posiciones largas (% rentables)**       | 505 (73.27%)      |
-| **Transacción rentable promedio**         | 82.04 USD         |
-| **Transacción no rentable promedio**      | -157.28 USD       |
+| **Total de operaciones ejecutadas**       | 952               |
+| **Total de transacciones**                | 1,904             |
+| **Posiciones rentables (% del total)**    | 662 (69.54%)      |
+| **Posiciones no rentables (% del total)** | 290 (30.46%)      |
+| **Posiciones cortas (% rentables)**       | 450 (65.78%)      |
+| **Posiciones largas (% rentables)**       | 502 (72.91%)      |
+| **Transacción rentable promedio**         | 81.63 USD         |
+| **Transacción no rentable promedio**      | -155.67 USD       |
 | **Transacción rentable máxima**           | 163.75 USD        |
 | **Transacción no rentable máxima**        | -197.43 USD       |
 | **Máximo de ganancias consecutivas**      | 17 (1,073.28 USD) |
@@ -93,7 +94,7 @@ Esta simulación fue realizada para el Expert Advisor **FusRoDah! v03** en MetaT
 | **Máximo de beneficio consecutivo**       | 1,412.17 USD (12) |
 | **Máximo de pérdidas consecutivas**       | -837.28 USD (6)   |
 | **Promedio de ganancias consecutivas**    | 3                 |
-| **Promedio de pérdidas consecutivas**     | 1                 |
+| **Promedio de pérdidas consecutivas**     | 2                 |
 
 ---
 
@@ -105,5 +106,6 @@ Esta simulación fue realizada para el Expert Advisor **FusRoDah! v03** en MetaT
 
 ## ⚠️ Notas y Advertencia
 
-- Esta simulación se realizó después de un proceso de optimización de parámetros.
-- **Advertencia**: Aunque la optimización mejora el rendimiento, al estar concentrada en un período de apenas dos años y cuatro meses (01-01-2023 a 30-04-2025), puede haber cierta **sobreoptimización**. Esto significa que los resultados podrían no ser completamente representativos de condiciones futuras del mercado. Se recomienda realizar pruebas adicionales en períodos más amplios o en condiciones de mercado en vivo para validar la robustez de la estrategia.
+- Esta simulación se realizó después de un proceso de optimización de parámetros, incluyendo la activación de `PERMITIR_OPERACIONES_MULTIPLES=true`, lo que permite una estrategia más agresiva al abrir múltiples operaciones simultáneas.
+- **Advertencia**: Aunque la optimización mejora el rendimiento, al estar concentrada en un período de apenas dos años y cuatro meses (01-01-2023 a 30-04-2025), puede haber cierta **sobreoptimización**. La estrategia con múltiples operaciones simultáneas aumenta el riesgo de exposición, especialmente en mercados volátiles. Se recomienda realizar pruebas adicionales en períodos más amplios o en condiciones de mercado en vivo para validar la robustez de la estrategia.
+- **Gestión de riesgos**: Asegúrese de ajustar parámetros como `LOTE_FIJO`, `PERDIDA_DIARIA_MAXIMA` y `SALDO_MINIMO_OPERATIVO` según el tamaño de su cuenta y tolerancia al riesgo, especialmente con múltiples operaciones activas.
