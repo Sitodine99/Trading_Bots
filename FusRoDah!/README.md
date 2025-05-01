@@ -83,7 +83,8 @@ Esta gestión de riesgo asegura que **FusRoDah!** sea compatible con las reglas 
 
 ## 📊 Resultados de Simulación
 
-**FusRoDah!** ha sido evaluado con datos reales en MetaTrader 5 usando una simulación con parámetros optimizados. [Sección pendiente: Añade tus resultados de backtest aquí.]
+**FusRoDah!** ha sido evaluado con datos reales en MetaTrader 5 usando una simulación con parámetros optimizados.
+- **[Resultados de Simulación](Simulaciones%20y%20optimizaciones/README.md)**
 
 ---
 
