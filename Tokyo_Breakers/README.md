@@ -39,16 +39,11 @@ Si se activa (`UseBreakoutDistance`) el EA no esperará al cierre de la vela par
 ### Gestión de Operaciones y Riesgo
 **Tokyo_Breakers** incluye varias herramientas para gestionar las operaciones y controlar el riesgo, asegurando un trading disciplinado:
 
-- **Stop Loss y Take Profit**:
-  - Cada operación tiene un **Stop Loss** (`SL_Points`) y un **Take Profit** (`TP_Points`) definidos en puntos, lo que limita las pérdidas y asegura las ganancias.
-- **Trailing Stop**:
-  - Activable con el parámetro `UseTrailingStop`. Una vez que la operación alcanza un beneficio mínimo (`TrailingStopActivation`), el EA ajusta dinámicamente el Stop Loss (`TrailingStopStep`) para proteger las ganancias en tendencias prolongadas.
-- **Multiplicador de Lotes**:
-  - Si `UseComboMultiplier` está activado, el EA aumenta el tamaño del lote (`ComboMultiplier`) después de una operación ganadora, hasta un máximo (`MaxContractSize`). Si la operación es perdedora, el lote vuelve al tamaño inicial (`LotSize`).
-- **Límites de Posiciones**:
-  - El EA restringe el número máximo de posiciones abiertas por dirección (`MaxPositions`), evitando acumulación excesiva de riesgo.
-- **Separación Temporal**:
-  - Exige un número mínimo de velas entre operaciones (`CandleSeparation`) para evitar operar en exceso durante movimientos rápidos.
+- **Stop Loss y Take Profit**: Cada operación tiene un **Stop Loss** (`SL_Points`) y un **Take Profit** (`TP_Points`) definidos en puntos, lo que limita las pérdidas y asegura las ganancias.
+- **Trailing Stop**: Activable con el parámetro `UseTrailingStop`. Una vez que la operación alcanza un beneficio mínimo (`TrailingStopActivation`), el EA ajusta dinámicamente el Stop Loss (`TrailingStopStep`) para proteger las ganancias en tendencias prolongadas.
+- **Multiplicador de Lotes**: Si `UseComboMultiplier` está activado, el EA aumenta el tamaño del lote (`ComboMultiplier`) después de una operación ganadora, hasta un máximo (`MaxContractSize`). Si la operación es perdedora, el lote vuelve al tamaño inicial (`LotSize`).
+- **Límites de Posiciones**: El EA restringe el número máximo de posiciones abiertas por dirección (`MaxPositions`), evitando acumulación excesiva de riesgo.
+- **Separación Temporal**: Exige un número mínimo de velas entre operaciones (`CandleSeparation`) para evitar operar en exceso durante movimientos rápidos.
 - **Gestión de Capital**:
   - **Objetivo de Saldo**: Si `UseBalanceTarget` está activado, el EA cierra todas las posiciones y se desactiva al alcanzar un saldo objetivo (`BalanceTarget`).
   - **Saldo Mínimo**: Si el capital cae por debajo de un mínimo (`MinOperatingBalance`), el EA cierra todas las posiciones y se detiene.
