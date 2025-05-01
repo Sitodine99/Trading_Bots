@@ -103,26 +103,26 @@ Esta gestión de riesgo asegura que **Tokyo Breakers** sea compatible con las re
 
 | Parámetro                   | Descripción                                               | Valor por defecto |
 |-----------------------------|-----------------------------------------------------------|-------------------|
-| `BB_Period`                 | Periodo de las Bandas de Bollinger                        | 36                |
-| `BB_Deviation`              | Desviación estándar para las bandas                       | 2.0               |
-| `LotSize`                   | Tamaño de lote inicial                                    | 1.0               |
-| `SL_Points`                 | Stop Loss en puntos                                       | 350               |
+| `BB_Period`                 | Periodo de las Bandas de Bollinger                        | 14                |
+| `BB_Deviation`              | Desviación estándar para las bandas                       | 1.0               |
+| `LotSize`                   | Tamaño de lote inicial                                    | 0.3               |
+| `SL_Points`                 | Stop Loss en puntos                                       | 390               |
 | `TP_Points`                 | Take Profit en puntos                                     | 350               |
 | `UseTrailingStop`           | Activar/desactivar trailing stop                          | true              |
-| `TrailingStopActivation`    | Beneficio necesario para activar trailing stop            | 150               |
-| `TrailingStopStep`          | Paso del trailing stop en puntos                          | 10                |
+| `TrailingStopActivation`    | Beneficio necesario para activar trailing stop            | 50                |
+| `TrailingStopStep`          | Paso del trailing stop en puntos                          | 15                |
 | `MaxPositions`              | Máximo de operaciones abiertas por dirección              | 2                 |
-| `CandleSeparation`          | Velas mínimas entre operaciones nuevas                    | 7                 |
+| `CandleSeparation`          | Velas mínimas entre operaciones nuevas                    | 2                 |
 | `UseBalanceTarget`          | Activar objetivo de balance                               | true              |
 | `BalanceTarget`             | Objetivo de balance para cerrar el bot                    | 11000.0           |
 | `MinOperatingBalance`       | Balance mínimo para operar                                | 9050.0            |
 | `MaxDailyLossFTMO`          | Pérdida diaria máxima permitida                           | 500.0             |
 | `SafetyBeltFactor`          | Multiplicador de seguridad sobre la pérdida máxima diaria | 0.5               |
-| `UseComboMultiplier`        | Activar multiplicador de lotes tras ganancia              | true              |
+| `UseComboMultiplier`        | Activar multiplicador de lotes tras ganancia              | false             |
 | `ComboMultiplier`           | Multiplicador en rachas ganadoras                         | 2.0               |
-| `MaxContractSize`           | Tamaño máximo de lote                                     | 1.0               |
-| `UseBreakoutDistance`       | Activar ruptura en la vela actual                         | false             |
-| `BreakoutDistancePoints`    | Distancia mínima para confirmar la ruptura                | 150               |
+| `MaxContractSize`           | Tamaño máximo de lote                                     | 2.0               |
+| `UseBreakoutDistance`       | Activar ruptura en la vela actual                         | true              |
+| `BreakoutDistancePoints`    | Distancia mínima para confirmar la ruptura                | 250               |
 
 ## 📝 Notas de Uso
 

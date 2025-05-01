@@ -53,7 +53,7 @@ El EA incorpora herramientas avanzadas de gestión de capital, incluyendo **Stop
 
 ### 1. Límite de Pérdida Diaria
 - **Parámetro**: `PERDIDA_DIARIA_MAXIMA` (USD) define la pérdida máxima permitida en un día.
-- **Cinturón de Seguridad**: El parámetro `FACTOR_CINTURON_SEGURIDAD` (0.0 a 1.0) reduce el límite efectivo de pérdida diaria. Por ejemplo, si `PERDIDA_DIARIA_MAXIMA = 500` y `FACTOR_CINTURON_SEGURIDAD = 0.5`, el límite real es **250 USD**.
+- **Cinturón de Seguridad**: El parámetro `FACTOR_CINTURON_SEGURIDAD` (0.0 a 1.0) reduce el límite efectivo de pérdida diaria. Por ejemplo, si `PERDIDA_DIARIA_MAXIMA = 500` y `FACTOR_CINTURON_SEGURIDAD = 0.95`, el límite real es **475 USD**.
 - **Cálculo**: Combina pérdidas realizadas y flotantes (`calcular_perdida_diaria_total`) para monitorear el riesgo en tiempo real.
 - **Acción**: Si se alcanza el límite, el EA cierra todas las posiciones y desactiva el trading hasta el siguiente día (00:00 hora de España).
 
@@ -102,27 +102,27 @@ Esta gestión de riesgo asegura que **FusRoDah!** sea compatible con las reglas 
 
 | Parámetro                       | Descripción                                               | Valor por defecto |
 |---------------------------------|-----------------------------------------------------------|-------------------|
-| `LOTE_FIJO`                     | Tamaño de lote inicial                                    | 0.3               |
-| `USAR_MULTIPLICADOR`            | Activar multiplicador de lotes tras ganancia              | true              |
+| `LOTE_FIJO`                     | Tamaño de lote inicial                                    | 1.0               |
+| `USAR_MULTIPLICADOR`            | Activar multiplicador de lotes tras ganancia              | false             |
 | `MULTIPLICADOR_LOTES`           | Multiplicador en rachas ganadoras                         | 2.0               |
-| `LOTE_MAXIMO`                   | Tamaño máximo de lote                                     | 2.4               |
+| `LOTE_MAXIMO`                   | Tamaño máximo de lote                                     | 4.8               |
 | `PERIODO`                       | Marco temporal del gráfico                                | PERIOD_H1         |
 | `COLOR_RECTANGULO`              | Color del rectángulo del rango en el gráfico              | clrBlue           |
-| `HORA_INICIAL_RANGO1`           | Hora inicial del primer rango (UTC+3)                     | 5.0               |
+| `HORA_INICIAL_RANGO1`           | Hora inicial del primer rango (UTC+3)                     | 3.0               |
 | `HORA_FINAL_RANGO1`             | Hora final del primer rango (UTC+3)                       | 9.0               |
 | `HORA_INICIAL_RANGO2`           | Hora inicial del segundo rango (UTC+3)                    | 14.0              |
 | `HORA_FINAL_RANGO2`             | Hora final del segundo rango (UTC+3)                      | 17.0              |
-| `PUNTOS_SL`                     | Stop Loss en puntos                                       | 42000             |
-| `PUNTOS_TP`                     | Take Profit en puntos                                     | 10000             |
-| `HORAS_EXPIRACION`              | Expiración de órdenes pendientes (horas)                  | 3                 |
-| `USAR_TRAILING_STOP`            | Activar/desactivar trailing stop                          | false             |
-| `PUNTOS_ACTIVACION_TRAILING`    | Beneficio necesario para activar trailing stop            | 150               |
-| `PASO_TRAILING_STOP`            | Paso del trailing stop en puntos                          | 10                |
+| `PUNTOS_SL`                     | Stop Loss en puntos                                       | 18000             |
+| `PUNTOS_TP`                     | Take Profit en puntos                                     | 16000             |
+| `HORAS_EXPIRACION`              | Expiración de órdenes pendientes (horas)                  | 6                 |
+| `USAR_TRAILING_STOP`            | Activar/desactivar trailing stop                          | true              |
+| `PUNTOS_ACTIVACION_TRAILING`    | Beneficio necesario para activar trailing stop            | 6000              |
+| `PASO_TRAILING_STOP`            | Paso del trailing stop en puntos                          | 1500              |
 | `USAR_OBJETIVO_SALDO`           | Activar objetivo de saldo                                 | true              |
 | `OBJETIVO_SALDO`                | Objetivo de saldo para cerrar el bot                      | 11000.0           |
-| `SALDO_MINIMO_OPERATIVO`        | Saldo mínimo para operar                                  | 9050.0            |
+| `SALDO_MINIMO_OPERATIVO`        | Saldo mínimo para operar                                  | 9000.0            |
 | `PERDIDA_DIARIA_MAXIMA`         | Pérdida diaria máxima permitida                           | 500.0             |
-| `FACTOR_CINTURON_SEGURIDAD`     | Multiplicador de seguridad sobre la pérdida máxima diaria | 0.5               |
+| `FACTOR_CINTURON_SEGURIDAD`     | Multiplicador de seguridad sobre la pérdida máxima diaria | 0.95              |
 
 ---
 
