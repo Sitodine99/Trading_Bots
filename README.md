@@ -15,7 +15,7 @@ Bots de trading automatizados en MQL5 para MetaTrader 5 (MT5). Contiene expertos
   <tr>
     <td style="text-align:center"><img src="Tokyo_Breakers/images/Tokyo_Breakers_logo.png" style="width:180px; min-width:180px; max-width:180px;"/></td>
     <td style="text-align:center"><a href="Tokyo_Breakers/README.md"><b>Tokyo_Breakers</b></a></td>
-    <td style="text-align:center">Expert Advisor para MetaTrader 5 que opera en <b>USDJPY</b> diseñado para ejecutar operaciones automáticas basadas en <b>rupturas de Bandas de Bollinger</b>.</td>
+    <td style="text-align:center">Expert Advisor para MetaTrader 5 que opera en <b>USDJPY</b> en temporalidad H1, diseñado para ejecutar operaciones automáticas basadas en <b>rupturas de Bandas de Bollinger</b> a favor de la tendencia.</td>
   </tr>
   <tr>
     <td style="text-align:center"><img src="FusRoDah!/images/FusRoDah!_logo.png" style="width:180px; min-width:180px; max-width:180px;"/></td>
@@ -25,7 +25,7 @@ Bots de trading automatizados en MQL5 para MetaTrader 5 (MT5). Contiene expertos
   <tr>
     <td style="text-align:center"><img src="John_Wick_H4/images/John_Wick_H4_logo.png" style="width:180px; min-width:180px; max-width:180px;"/></td>
     <td style="text-align:center"><a href="John_Wick_H4/README.md"><b>John_Wick_H4</b></a></td>
-    <td style="text-align:center">Expert Advisor para MetaTrader 5 que opera en <b>AUDCAD</b> en temporalidad H4. Utiliza una estrategia de <b>ruptura de Bandas de Bollinger</b>, entrando al romper las bandas y saliendo al alcanzar la banda central, con gestión de riesgo alineada a FTMO.</td>
+    <td style="text-align:center">Expert Advisor para MetaTrader 5 que opera en <b>AUDCAD</b> en temporalidad H4. Utiliza una estrategia de <b>ruptura de Bandas de Bollinger</b>, entrando al romper las bandas y saliendo al alcanzar la banda central.</td>
   </tr>
 </table>
 
