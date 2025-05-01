@@ -22,6 +22,11 @@ Bots de trading automatizados en MQL5 para MetaTrader 5 (MT5). Contiene expertos
     <td style="text-align:center"><a href="FusRoDah!/README.md"><b>FusRoDah!</b></a></td>
     <td style="text-align:center">Expert Advisor para MetaTrader 5 que opera en <b>índices americanos</b>. Implementa una estrategia de <b>ruptura de rangos</b>, colocando órdenes pendientes BuyStop y SellStop en los máximos y mínimos de rangos definidos en dos ventanas horarias diarias.</td>
   </tr>
+  <tr>
+    <td style="text-align:center"><img src="John_Wick_H4/images/John_Wick_H4_logo.png" style="width:180px; min-width:180px; max-width:180px;"/></td>
+    <td style="text-align:center"><a href="John_Wick_H4/README.md"><b>John_Wick_H4</b></a></td>
+    <td style="text-align:center">Expert Advisor para MetaTrader 5 que opera en <b>AUDCAD</b> en temporalidad H4. Utiliza una estrategia de <b>ruptura de Bandas de Bollinger</b>, entrando al romper las bandas y saliendo al alcanzar la banda central, con gestión de riesgo alineada a FTMO.</td>
+  </tr>
 </table>
 
 ---
