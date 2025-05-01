@@ -27,6 +27,11 @@ Bots de trading automatizados en MQL5 para MetaTrader 5 (MT5). Contiene expertos
     <td style="text-align:center"><a href="John_Wick_H4/README.md"><b>John_Wick_H4</b></a></td>
     <td style="text-align:center">Expert Advisor para MetaTrader 5 que opera en <b>AUDCAD</b> en temporalidad H4. Utiliza una estrategia de <b>ruptura de Bandas de Bollinger</b>, entrando al romper las bandas y saliendo al alcanzar la banda central.</td>
   </tr>
+  <tr>
+    <td style="text-align:center"><img src="Pirañas/images/Pirañas_logo.png" style="width:180px; min-width:180px; max-width:180px;"/></td>
+    <td style="text-align:center"><a href="Pirañas/README.md"><b>Pirañas</b></a></td>
+    <td style="text-align:center">Expert Advisor para MetaTrader 5 que implementa una estrategia de <b>reversión</b> basada en niveles extremos de RSI, tendencia bajista/alcista según EMA, y mercado en rango confirmado por ADX, con gestión de lotes progresiva.</td>
+  </tr>
 </table>
 
 ---

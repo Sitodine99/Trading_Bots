@@ -12,6 +12,7 @@ El EA incorpora herramientas avanzadas de gestión de capital, incluyendo **Stop
 
 - **Índices soportados**: Opera en índices americanos como US100, US500, US30, US2000, SPX500, NAS100, DJI30.
 - **Estrategia de ruptura de rangos**: Coloca órdenes pendientes **BuyStop** y **SellStop** en los máximos y mínimos de rangos horarios.
+- **Operaciones múltiples**: Permite activar o desactivar la posibilidad de abrir varias operaciones simultáneamente, aumentando la agresividad de la estrategia si se desea.
 - **Gestión de riesgo avanzada**: Cumple con los límites de pérdida diaria y objetivos de fondeo de FTMO.
 - **Trailing Stop dinámico**: Ajusta el Stop Loss para proteger beneficios (opcional).
 - **Multiplicador de lotes**: Aumenta el tamaño del lote tras operaciones ganadoras (opcional).
@@ -34,9 +35,9 @@ El EA incorpora herramientas avanzadas de gestión de capital, incluyendo **Stop
   - Una orden **BuyStop** se coloca en el **máximo del rango**, esperando una ruptura alcista.
   - Una orden **SellStop** se coloca en el **mínimo del rango**, esperando una ruptura bajista.
 - **Expiración**: Las órdenes pendientes expiran tras un tiempo definido por el usuario (`HORAS_EXPIRACION`), permitiendo flexibilidad para ajustar la duración según la estrategia.
+- **Operaciones múltiples**: Si `PERMITIR_OPERACIONES_MULTIPLES` está activado (`true`), el EA puede colocar nuevas órdenes incluso si ya existen posiciones abiertas u órdenes pendientes, aumentando la exposición al mercado. Si está desactivado (`false`), solo se coloca una orden por rango si no hay órdenes o posiciones activas, evitando sobreoperar.
 - **Razonamiento**: La estrategia aprovecha movimientos de ruptura tras periodos de consolidación, comunes en índices americanos, asumiendo que las rupturas indican momentum direccional. Los rangos horarios personalizables permiten al usuario alinear la operativa con sesiones específicas del mercado.
 - **Filtros**:
-  - Solo se coloca una orden por rango si no hay órdenes pendientes activas, evitando sobreoperar.
   - Validaciones de Stop Loss y Take Profit para cumplir con los niveles mínimos del broker.
 
 ### Gestión de Operaciones
@@ -111,13 +112,14 @@ Esta gestión de riesgo asegura que **FusRoDah!** sea compatible con las reglas 
 | `HORA_INICIAL_RANGO1`           | Hora inicial del primer rango (UTC+3)                     | 3.0               |
 | `HORA_FINAL_RANGO1`             | Hora final del primer rango (UTC+3)                       | 9.0               |
 | `HORA_INICIAL_RANGO2`           | Hora inicial del segundo rango (UTC+3)                    | 14.0              |
-| `HORA_FINAL_RANGO2`             | Hora final del segundo rango (UTC+3)                      | 17.0              |
+| `HORA_FINAL_RANGO2`             | Hora final del segundo rango (UTC+ educate
 | `PUNTOS_SL`                     | Stop Loss en puntos                                       | 18000             |
 | `PUNTOS_TP`                     | Take Profit en puntos                                     | 16000             |
 | `HORAS_EXPIRACION`              | Expiración de órdenes pendientes (horas)                  | 6                 |
 | `USAR_TRAILING_STOP`            | Activar/desactivar trailing stop                          | true              |
 | `PUNTOS_ACTIVACION_TRAILING`    | Beneficio necesario para activar trailing stop            | 6000              |
 | `PASO_TRAILING_STOP`            | Paso del trailing stop en puntos                          | 1500              |
+| `PERMITIR_OPERACIONES_MULTIPLES`| Permitir múltiples operaciones simultáneas                | false             |
 | `USAR_OBJETIVO_SALDO`           | Activar objetivo de saldo                                 | true              |
 | `OBJETIVO_SALDO`                | Objetivo de saldo para cerrar el bot                      | 11000.0           |
 | `SALDO_MINIMO_OPERATIVO`        | Saldo mínimo para operar                                  | 9000.0            |

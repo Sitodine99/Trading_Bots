@@ -1,6 +1,6 @@
 # Pirañas
 
-![Pirañas Logo](images/Piranhas_logo.png)
+![Pirañas Logo](images/Pirañas_logo.png)
 
 **Pirañas** es un **Expert Advisor (EA)** desarrollado para **MetaTrader 5**, diseñado para operar principalmente en el par de divisas **EUR/USD** en el marco temporal de **10 minutos (M10)**. Este bot automatiza operaciones basadas en una estrategia de **reversión al rango** utilizando indicadores técnicos como **RSI**, **EMA**, y **ADX**, con el objetivo de capturar beneficios pequeños y constantes ("bocaditos") en mercados de baja tendencia. Incorpora una gestión de riesgos robusta, alineada con los requisitos de desafíos de fondeo como **FTMO**, y utiliza un sistema de **martingala conservadora** para recuperar pérdidas de manera controlada.
 
