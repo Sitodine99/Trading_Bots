@@ -17,3 +17,6 @@
 - **[Simulación optimizada - 01-02-2025 a 28-02-2025 - Balance inicial 10,000.00 USD - Beneficio neto -763.22 USD - Saldo objetivo 11,000.00 USD alcanzado el 06-02-2025](README10.md)**
 - **[Simulación optimizada - 01-03-2025 a 31-03-2025 - Balance inicial 10,000.00 USD - Beneficio neto -951.09 USD](README11.md)**
 - **[Simulación optimizada - 01-04-2025 a 30-04-2025 - Balance inicial 10,000.00 USD - Beneficio neto 1,100.49 USD](README12.md)**
+
+# Configuración para recuperar cuenta quemada:
+- **[Simulación optimizada - 01-01-2025 a 01-05-2025 - Balance inicial 9,346.68 USD - Beneficio neto 1,565.44 USD](README13.md)**
