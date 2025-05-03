@@ -18,7 +18,6 @@ El EA incorpora herramientas avanzadas de gestión de capital, incluyendo **Stop
 - **Coberturas (Hedging)**: Activable para abrir posiciones de cobertura en niveles específicos, con Stop Loss y Take Profit independientes.
 - **Gestión de riesgo avanzada**: Cumple con los límites de pérdida diaria y objetivos de fondeo de FTMO.
 - **Trailing Stop dinámico**: Ajusta el Stop Loss para proteger beneficios (opcional).
-- **Multiplicador de lotes**: Aumenta el tamaño del lote tras operaciones ganadoras (opcional).
 - **Protección de capital**: Cierre automático por pérdida diaria máxima, saldo mínimo o meta de balance alcanzada.
 - **Configuración flexible**: Amplios parámetros ajustables para adaptarse a diferentes estilos de trading.
 
@@ -26,7 +25,7 @@ El EA incorpora herramientas avanzadas de gestión de capital, incluyendo **Stop
 
 ## 🚀 Estrategia de Trading
 
-**MECHA-GODZILLA** utiliza una estrategia de **grid trading** para identificar oportunidades en pares de divisas, implementando un sistema de niveles de precios (grid) donde se abren posiciones de compra y venta según el movimiento del precio. El punto central del grid puede ser fijo (`FixedCentralPoint`) o calculado dinámicamente con base en velas (`UseCandleBasedCentralPoint`).
+**MECHA-GODZILLA** utiliza una estrategia de **grid trading**, implementando un sistema de niveles de precios (grid) donde se abren posiciones de compra y venta según el movimiento del precio. El punto central del grid puede ser fijo (`FixedCentralPoint`) o calculado dinámicamente con base al número de velas (`UseCandleBasedCentralPoint`).
 
 ### Formación del Grid
 - **Punto central**: Puede ser un valor fijo (`FixedCentralPoint`) o calculado como el promedio entre el máximo y el mínimo de un número definido de velas (`CandlesToConsider`).
@@ -36,9 +35,9 @@ El EA incorpora herramientas avanzadas de gestión de capital, incluyendo **Stop
 
 ### Lógica de Operación
 - **Apertura de posiciones**:
-  - **Compra**: Se abre una posición de compra cuando el precio cruza un nivel de compra hacia abajo (`gridLevelsBuy`).
-  - **Venta**: Se abre una posición de venta cuando el precio cruza un nivel de venta hacia arriba (`gridLevelsSell`).
-  - **Múltiples posiciones por nivel**: Permite abrir hasta `MaxPositionsPerLevel` posiciones por nivel.
+  - **Compra**: Se abre una posición de compra cuando el precio cruza un nivel de compra hacia abajo (`gridLevelsBuy`). Si no hay posiciones abiertas en ese nivel, se abre una nueva posición.
+  - **Venta**: Se abre una posición de venta cuando el precio cruza un nivel de venta hacia arriba (`gridLevelsSell`). Si no hay posiciones abiertas en ese nivel, se abre una nueva posición.
+  - **Múltiples posiciones por nivel**: Permite abrir hasta `MaxPositionsPerLevel` posiciones por nivel. Además, siempre que se liquida una posición en el nivel inferior (para compras) o superior (para ventas), el bot puede abrir una operación adicional en el nivel inmediatamente superior (para compras) o inferior (para ventas), si ya existe una posición en ese nivel y no se ha abierto una adicional (`additionalPositionsOpenedBuy/Sell`).
   - **Límite total de posiciones**: Restringe el número total de posiciones abiertas en el grid (`MaxGridPositions`), excluyendo coberturas.
 - **Filtro ATR**: Si `UseAtrFilter` está activado, el bot solo abre posiciones si el valor del ATR está dentro del rango definido (`AtrLow` a `AtrHigh`), evitando operar en condiciones de volatilidad extrema.
 - **Coberturas (Hedging)**: Si `UseHedging` está activado, el bot puede abrir posiciones de cobertura (`HedgeContractSize`) cuando una posición principal se acerca a su Stop Loss, a una distancia definida (`HedgePointsBeforeSL`).
@@ -49,7 +48,6 @@ El EA incorpora herramientas avanzadas de gestión de capital, incluyendo **Stop
 
 ### Gestión de Operaciones
 - **Stop Loss y Take Profit**: Configurables en puntos (`StopLossPointsGraphics`, `HedgeStopLossPoints`, `HedgeTakeProfitPoints`) para posiciones principales y coberturas.
-- **Trailing Stop**: Activable (`UseTrailingStop`) y configurable (`TrailingStopActivation`, `TrailingStopStep`) para proteger ganancias en tendencias prolongadas.
 - **Límite de posiciones**: Controla el número máximo de posiciones abiertas por nivel (`MaxPositionsPerLevel`) y en todo el grid (`MaxGridPositions`).
 - **Visualización**: Dibuja líneas en el gráfico para visualizar los niveles del grid y el punto central.
 
