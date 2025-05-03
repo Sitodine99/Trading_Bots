@@ -41,15 +41,15 @@ Este documento presenta los resultados del FTMO Trial (ID: 1510377999), realizad
 **Resumen Diario (Gráfico de Barras)**  
 ![Resumen Diario Gráfico de Barras](Simulaciones%20y%20optimizaciones/06.png)
 
-**Métricas Adicionales**  
+**ID de la cuenta**  
 ![Métricas Adicionales](Simulaciones%20y%20optimizaciones/07.png)
 
 ### 📊 Datos Exportados
-- **Archivo XLS**: [export-17462930.xlsx](Simulaciones%20y%20optimizaciones/export-17462930.xlsx) (56.1x)
-- **Archivo CSV**: [export-17462931.csv](Simulaciones%20y%20optimizaciones/export-17462931.csv) (34.4csv)
+- **Archivo XLS**: [export-17462930.xlsx](Simulaciones%20y%20optimizaciones/export-1746293056.xlsx) (56.1x)
+- **Archivo CSV**: [export-17462931.csv](Simulaciones%20y%20optimizaciones/export-1746293134.csv) (34.4csv)
 
 ### 📜 Reporte de Trades
-- **Trade Report (PDF)**: [Trade_report-1510377999_2025-03-28.pdf](Simulaciones%20y%20optimizaciones/Trade_report%2D1510377999_2025%2D03%2D28.pdf)
+- **Trade Report (PDF)**: [Trade report-1510377999 2025-03-28 03-30.pdf](Simulaciones%20y%20optimizaciones/Trade_report%2D1510377999_2025%2D03%2D28.pdf)
 
 ## 📝 Notas Adicionales
 - El trial fue realizado con el bot "Mecha-Godzilla Free Trial" en el par AUD/USD.
