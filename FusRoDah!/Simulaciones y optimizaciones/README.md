@@ -5,7 +5,7 @@
 
 ## ⚡ Set de configuración agresivo para el challenge FTMO:
 
-- **[Simulación optimizada - 01-01-2025 a 30-04-2025 - Balance inicial 10,000 USD - Beneficio neto 8,896.55 USD](README03.md)**
+- **[Simulación optimizada - 01-01-2025 a 30-04-2025 - Balance inicial 10,000 USD - Beneficio neto 7,718.57 USD](README03.md)**
 
 ## 🕒 Simulaciones previas antes del Challenge:
 
