@@ -100,7 +100,7 @@ Esta simulación fue realizada para el Expert Advisor **FusRoDah! v03** en MetaT
 
 ## 📉 Gráfico de Rendimiento
 
-![Gráfico General](ReportTester-550097663.png)
+![Gráfico General](ReportTester-01.png)
 
 ---
 
