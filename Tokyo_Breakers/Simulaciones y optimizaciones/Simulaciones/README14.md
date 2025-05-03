@@ -98,7 +98,7 @@ Esta simulación fue realizada para el Expert Advisor **Tokyo_Breakers** en Meta
 
 ## 🎲 Gráfico de Rendimiento
 
-![Gráfico General](Simulaciones/ReportTester40.png)
+![Gráfico General](ReportTester40.png)
 
 ---
 
