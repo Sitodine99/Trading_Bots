@@ -20,3 +20,4 @@
 
 # Configuración para recuperar cuenta quemada:
 - **[Simulación optimizada - 01-01-2025 a 01-05-2025 - Balance inicial 9,346.68 USD - Beneficio neto 1,565.44 USD](Simulaciones/README13.md)**
+- **[Simulación optimizada - 01-01-2025 a 01-05-2025 - Balance inicial 9,346.68 USD - Beneficio neto 2,379.55 USD - Bollinger en 40 períodos](Simulaciones/README14.md)**
