@@ -34,8 +34,8 @@ Bots de trading automatizados en MQL5 para MetaTrader 5 (MT5). Contiene expertos
   </tr>
   <tr>
     <td style="text-align:center"><img src="Mecha_Godzilla/images/MECHA-GODZILLA_logo.png" style="width:180px; min-width:180px; max-width:180px;"/></td>
-    <td style="text-align:center"><a href="Mecha_Godzilla/README.md"><b>MECHA-GODZILLA</b></a></td>
-    <td style="text-align:center">Expert Advisor para MetaTrader 5 que opera en <b>pares de divisas</b> como USDJPY en temporalidad H1. Utiliza una estrategia de <b>grid trading</b> con niveles de precios predefinidos, filtro ATR, y coberturas (hedging) para gestionar el riesgo, ideal para mercados estables o de rango.</td>
+    <td style="text-align:center"><a href="Mecha_Godzilla/README.md"><b>Mecha-Godzilla</b></a></td>
+    <td style="text-align:center">Expert Advisor para MetaTrader 5 que utiliza una estrategia de <b>grid trading</b> con niveles de precios predefinidos, filtro ATR, y coberturas (hedging) para gestionar el riesgo, ideal para mercados estables o de rango.</td>
   </tr>
 </table>
 
