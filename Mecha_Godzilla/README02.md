@@ -29,11 +29,20 @@ Este documento presenta los resultados del FTMO Trial (ID: 1510377999), realizad
 
 ## 📁 Recursos y Visualizaciones
 ### 🖼️ Imágenes
-- **Estadísticas Generales**: [03.png](03.png)
-- **Resumen Diario (Histograma)**: [04.png](04.png)
-- **Evolución del Balance**: [05.png](05.png)
-- **Resumen Diario (Gráfico de Barras)**: [06.png](06.png)
-- **Métricas Adicionales**: [07.png](07.png)
+**Estadísticas Generales**  
+![Estadísticas Generales](03.png)
+
+**Resumen Diario (Histograma)**  
+![Resumen Diario Histograma](04.png)
+
+**Evolución del Balance**  
+![Evolución del Balance](05.png)
+
+**Resumen Diario (Gráfico de Barras)**  
+![Resumen Diario Gráfico de Barras](06.png)
+
+**Métricas Adicionales**  
+![Métricas Adicionales](07.png)
 
 ### 📊 Datos Exportados
 - **Archivo XLS**: [export-17462930.xlsx](export-17462930.xlsx) (56.1x)
@@ -44,4 +53,4 @@ Este documento presenta los resultados del FTMO Trial (ID: 1510377999), realizad
 
 ## 📝 Notas Adicionales
 - El trial fue realizado con el bot "Mecha-Godzilla Free Trial" en el par AUD/USD.
-- La estrategia cumplió con el objetivo de beneficio de $500.00, alcanzando $507.18 USD (Los dos últimos trades que se observa en el histórico son dos trades manuales, el bot ya había logrado el objetivo).
+- La estrategia cumplió con el objetivo de beneficio de $500.00, alcanzando $507.18 USD (Los dos últimos trades que se observan en el histórico son dos trades manuales, el bot ya había logrado el objetivo).
