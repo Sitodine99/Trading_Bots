@@ -4,7 +4,7 @@
 
 **MECHA-GODZILLA** es un **Expert Advisor (EA)** desarrollado para **MetaTrader 5**. Este bot automatiza operaciones basadas en una **estrategia de grid trading**, que utiliza niveles de precios predefinidos para abrir posiciones de compra y venta, con un enfoque en capturar movimientos del mercado y una gestión de riesgo robusta, especialmente alineada con los requisitos de desafíos de fondeo como **FTMO**.
 
-El EA incorpora herramientas avanzadas de gestión de capital, incluyendo **Stop Loss**, **Take Profit**, **Trailing Stop** opcional, **coberturas (hedging)**, un filtro basado en el **ATR**, y un sistema de **multiplicador de lotes** para maximizar el rendimiento tras operaciones ganadoras. Su diseño busca equilibrar rentabilidad y control de riesgo, respetando las reglas estrictas de los programas de fondeo.
+El EA incorpora herramientas avanzadas de gestión de capital, incluyendo **Stop Loss**, **Take Profit**, **Trailing Stop** opcional, **coberturas (hedging)**, un filtro basado en el **ATR**. Su diseño busca equilibrar rentabilidad y control de riesgo, respetando las reglas estrictas de los programas de fondeo.
 
 ---
 

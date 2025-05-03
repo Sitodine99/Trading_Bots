@@ -45,7 +45,6 @@ Este documento presenta los resultados del FTMO Trial (ID: 1510377999), realizad
 ![Métricas Adicionales](Simulaciones%20y%20optimizaciones/07.png)
 
 ### 📊 Datos Exportados
-- **Archivo XLS**: [export-17462930.xlsx](Simulaciones%20y%20optimizaciones/export-1746293056.xlsx) (56.1x)
 - **Archivo CSV**: [export-17462931.csv](Simulaciones%20y%20optimizaciones/export-1746293134.csv) (34.4csv)
 
 ### 📜 Reporte de Trades
