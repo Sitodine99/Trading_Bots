@@ -30,26 +30,26 @@ Este documento presenta los resultados del FTMO Trial (ID: 1510377999), realizad
 ## 📁 Recursos y Visualizaciones
 ### 🖼️ Imágenes
 **Estadísticas Generales**  
-![Estadísticas Generales](03.png)
+![Estadísticas Generales](Simulaciones%20y%20optimizaciones/03.png)
 
 **Resumen Diario (Histograma)**  
-![Resumen Diario Histograma](04.png)
+![Resumen Diario Histograma](Simulaciones%20y%20optimizaciones/04.png)
 
 **Evolución del Balance**  
-![Evolución del Balance](05.png)
+![Evolución del Balance](Simulaciones%20y%20optimizaciones/05.png)
 
 **Resumen Diario (Gráfico de Barras)**  
-![Resumen Diario Gráfico de Barras](06.png)
+![Resumen Diario Gráfico de Barras](Simulaciones%20y%20optimizaciones/06.png)
 
 **Métricas Adicionales**  
-![Métricas Adicionales](07.png)
+![Métricas Adicionales](Simulaciones%20y%20optimizaciones/07.png)
 
 ### 📊 Datos Exportados
-- **Archivo XLS**: [export-17462930.xlsx](export-17462930.xlsx) (56.1x)
-- **Archivo CSV**: [export-17462931.csv](export-17462931.csv) (34.4csv)
+- **Archivo XLS**: [export-17462930.xlsx](Simulaciones%20y%20optimizaciones/export-17462930.xlsx) (56.1x)
+- **Archivo CSV**: [export-17462931.csv](Simulaciones%20y%20optimizaciones/export-17462931.csv) (34.4csv)
 
 ### 📜 Reporte de Trades
-- **Trade Report (PDF)**: [Trade_report-1510377999_2025-03-28.pdf](Trade_report-1510377999_2025-03-28.pdf)
+- **Trade Report (PDF)**: [Trade_report-1510377999_2025-03-28.pdf](Simulaciones%20y%20optimizaciones/Trade_report%2D1510377999_2025%2D03%2D28.pdf)
 
 ## 📝 Notas Adicionales
 - El trial fue realizado con el bot "Mecha-Godzilla Free Trial" en el par AUD/USD.
