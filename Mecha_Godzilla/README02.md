@@ -38,7 +38,7 @@ Este documento presenta los resultados del FTMO Trial (ID: 1510377999), realizad
 **Evolución del Balance**  
 ![Evolución del Balance](Simulaciones%20y%20optimizaciones/05.png)
 
-**Resumen Diario (Gráfico de Barras)**  
+**Resumen Diario**  
 ![Resumen Diario Gráfico de Barras](Simulaciones%20y%20optimizaciones/06.png)
 
 **ID de la cuenta**  
