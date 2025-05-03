@@ -17,7 +17,6 @@ El EA incorpora herramientas avanzadas de gestión de capital, incluyendo **Stop
 - **Límite de posiciones en el grid**: Controla el número máximo de posiciones abiertas en el grid (`MaxGridPositions`), excluyendo coberturas.
 - **Coberturas (Hedging)**: Activable para abrir posiciones de cobertura en niveles específicos, con Stop Loss y Take Profit independientes.
 - **Gestión de riesgo avanzada**: Cumple con los límites de pérdida diaria y objetivos de fondeo de FTMO.
-- **Trailing Stop dinámico**: Ajusta el Stop Loss para proteger beneficios (opcional).
 - **Protección de capital**: Cierre automático por pérdida diaria máxima, saldo mínimo o meta de balance alcanzada.
 - **Configuración flexible**: Amplios parámetros ajustables para adaptarse a diferentes estilos de trading.
 
@@ -94,6 +93,10 @@ Esta gestión de riesgo asegura que **MECHA-GODZILLA** sea compatible con las re
 
 **MECHA-GODZILLA** no incluye resultados de simulación específicos en este repositorio. Sin embargo, ha sido probado en cuentas demo, donde ha demostrado ser capaz de maximizar ganancias significativas cuando el precio permanece dentro de estos rangos, cerrando objetivos de ganancias en muy poco tiempo con **0 operaciones perdedoras** en condiciones ideales. Esto lo hace un bot con un potencial de alta rentabilidad en mercados estables o de rango.
 
+## 🕒 Prueba en un free trial de FTMO durante 6 días en AUDUSD:
+
+- **[24-03-2025 a 28-03-2025 - Balance inicial 10,000 USD - Beneficio neto 507.18 USD](README02.md)**
+
 **⚠️ Advertencia**: A pesar de su capacidad para generar ganancias rápidas, **MECHA-GODZILLA** puede ser **poco adecuado para cuentas de fondeo** como FTMO si el precio se sale de los rangos identificados. Su estrategia de grid trading lo hace **arriesgado** en mercados volátiles o en tendencias fuertes, ya que el bot puede acumular posiciones rápidamente, aumentando el riesgo de drawdown significativo. El éxito del bot depende en gran medida del buen criterio del usuario a la hora de elegir el activo específico en el que operará, el período de tiempo durante el cual se utilizará, y el objetivo de ganancias que se busca alcanzar. **MECHA-GODZILLA no es un bot que pueda dejarse operando en una cuenta sin supervisión continua**, ya que requiere monitoreo constante para evitar pérdidas significativas en condiciones de mercado desfavorables. Se recomienda realizar pruebas exhaustivas en el **Strategy Tester** de MetaTrader 5 con datos históricos en H1 para evaluar su rendimiento según las condiciones de tu broker y mercado.
 
 ---
@@ -148,7 +151,6 @@ Esta gestión de riesgo asegura que **MECHA-GODZILLA** sea compatible con las re
 - **Cuenta demo primero**: Siempre prueba el EA en entorno demo antes de aplicarlo en real.
 - **FTMO-Friendly**: Los límites de pérdida y el control de saldo están alineados con requisitos típicos de pruebas de fondeo.
 - **Optimizable**: El rendimiento puede mejorar según mercado, spread, y broker. Se recomienda evaluar la estrategia con el optimizador de MetaTrader para configurar los parámetros.
-- **Horario del broker**: Asegúrate de que el broker usa el horario UTC+3 para alinear las operaciones.
 - **Filtro ATR**: Si `UseAtrFilter` está activado, ajusta `AtrHigh` y `AtrLow` según la volatilidad del instrumento para optimizar las entradas.
 
 ---
