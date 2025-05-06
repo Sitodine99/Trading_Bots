@@ -28,7 +28,8 @@ Se implementa la solución, ahora el bot incluye una función cerrar_todas_orden
 
 Esto asegura que todas las órdenes pendientes se cancelen activamente en estas condiciones, evitando que queden órdenes residuales.
 
-## 🕒 Simulaciones *tras solucionar el problema de órdenes pendientes sin cancelarse*:
+## 🕒 Simulaciones *tras solucionar el problema de órdenes pendientes sin cancelarse* y multiplicador desactivado:
+
 
 - **[Simulación optimizada - ENERO - 2025 - Balance inicial 10,000 USD - Beneficio neto 1,420.55 USD](README08.md)**
 - **[Simulación optimizada - FEBRERO - 2025 - Balance inicial 10,000 USD - Beneficio neto 1,170.89 USD](README09.md)**
