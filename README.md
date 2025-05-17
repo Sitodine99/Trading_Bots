@@ -12,52 +12,40 @@ Bots de trading automatizados en MQL5 para MetaTrader 5 (MT5). Contiene expertos
     <th style="text-align:center;">Descripción</th>
   </tr>
   <tr>
-    <td style="text-align:center"><img src="Tokyo_Breakers/images/Tokyo_Breakers_logo.png" style="width:200px; min-width:200px; max-width:200px;"/></td>
-    <td style="text-align:left">
-      <a href="Tokyo_Breakers/README.md"><b>Tokyo_Breakers</b></a><br>
-      • 📈 <b>USDJPY</b>, H1<br>
-      • 🎯 <b>Bandas de Bollinger</b>: Ruptura a favor de tendencia
-    </td>
+    <td colspan="2" style="text-align:left; background-color:#f0f0f0; padding:10px;"><b>Bandas de Bollinger</b></td>
   </tr>
   <tr>
-    <td style="text-align:center"><img src="FusRoDah!/images/FusRoDah!_logo.png" style="width:200px; min-width:200px; max-width:200px;"/></td>
-    <td style="text-align:left">
-      <a href="FusRoDah!/README.md"><b>FusRoDah!</b></a><br>
-      • 📈 <b>Índices USA</b>, H1<br>
-      • 🎯 <b>Ruptura de rangos</b>: Órdenes BuyStop/SellStop
-    </td>
+    <td style="text-align:center"><img src="Tokyo_Breakers/images/Tokyo_Breakers_logo.png" style="width:200px; min-width:200px; max-width:200px;"/></td>
+    <td style="text-align:left"><a href="Tokyo_Breakers/README.md"><b>Tokyo_Breakers</b></a></td>
   </tr>
   <tr>
     <td style="text-align:center"><img src="John_Wick_H4/images/John_Wick_H4_logo.png" style="width:200px; min-width:200px; max-width:200px;"/></td>
-    <td style="text-align:left">
-      <a href="John_Wick_H4/README.md"><b>John_Wick_H4</b></a><br>
-      • 📈 <b>AUDCAD</b>, H4<br>
-      • 🎯 <b>Bandas de Bollinger</b>: Ruptura y retorno
-    </td>
+    <td style="text-align:left"><a href="John_Wick_H4/README.md"><b>John_Wick_H4</b></a></td>
   </tr>
   <tr>
-    <td style="text-align:center"><img src="Pirañas/images/Pirañas_logo.png" style="width:200px; min-width:200px; max-width:200px;"/></td>
-    <td style="text-align:left">
-      <a href="Pirañas/README.md"><b>Pirañas</b></a><br>
-      • 📈 <b>EURUSD</b>, H1<br>
-      • 🎯 <b>Reversión</b>: RSI, EMA, ADX
-    </td>
+    <td colspan="2" style="text-align:left; background-color:#f0f0f0; padding:10px;"><b>Estrategias de Rango</b></td>
   </tr>
   <tr>
-    <td style="text-align:center"><img src="Mecha_Godzilla/images/MECHA-GODZILLA_logo.png" style="width:200px; min-width:200px; max-width:200px;"/></td>
-    <td style="text-align:left">
-      <a href="Mecha_Godzilla/README.md"><b>Mecha-Godzilla</b></a><br>
-      • 📈 <b>Multi-símbolo</b>, H1<br>
-      • 🎯 <b>Grid Trading</b>: ATR, hedging
-    </td>
+    <td style="text-align:center"><img src="FusRoDah!/images/FusRoDah!_logo.png" style="width:200px; min-width:200px; max-width:200px;"/></td>
+    <td style="text-align:left"><a href="FusRoDah!/README.md"><b>FusRoDah!</b></a></td>
   </tr>
   <tr>
     <td style="text-align:center"><img src="Back_to_the_Range/images/Back_to_the_Range_logo.png" style="width:200px; min-width:200px; max-width:200px;"/></td>
-    <td style="text-align:left">
-      <a href="Back_to_the_Range/README.md"><b>Back to the Range</b></a><br>
-      • 📈 <b>Índices USA</b> (US30, US500), H1<br>
-      • 🎯 <b>Retorno al rango</b>: Liquidez, FTMO
-    </td>
+    <td style="text-align:left"><a href="Back_to_the_Range/README.md"><b>Back to the Range</b></a></td>
+  </tr>
+  <tr>
+    <td colspan="2" style="text-align:left; background-color:#f0f0f0; padding:10px;"><b>Reversión</b></td>
+  </tr>
+  <tr>
+    <td style="text-align:center"><img src="Pirañas/images/Pirañas_logo.png" style="width:200px; min-width:200px; max-width:200px;"/></td>
+    <td style="text-align:left"><a href="Pirañas/README.md"><b>Pirañas</b></a></td>
+  </tr>
+  <tr>
+    <td colspan="2" style="text-align:left; background-color:#f0f0f0; padding:10px;"><b>Grid Trading</b></td>
+  </tr>
+  <tr>
+    <td style="text-align:center"><img src="Mecha_Godzilla/images/MECHA-GODZILLA_logo.png" style="width:200px; min-width:200px; max-width:200px;"/></td>
+    <td style="text-align:left"><a href="Mecha_Godzilla/README.md"><b>Mecha-Godzilla</b></a></td>
   </tr>
 </table>
 
