@@ -26,7 +26,7 @@ Bots de trading automatizados en MQL5 para MetaTrader 5 (MT5). Contiene expertos
     <td colspan="2" style="text-align:center; background-color:#f0f0f0; padding:10px;"><b>Estrategias de Rango</b></td>
   </tr>
   <tr>
-    <td style="text-align:center"><img src="FusRoDah!/images/FusRoDah!_logo.png" style="width:200px; min-width:200px; max-width:200px;"/></td>
+    <td style="text-align:center"><img src="FusRoDah!/images/FusRoDah_centered.png" style="width:200px; min-width:200px; max-width:200px;"/></td>
     <td style="text-align:left"><a href="FusRoDah!/README.md"><b>FusRoDah!</b></a></td>
   </tr>
   <tr>
