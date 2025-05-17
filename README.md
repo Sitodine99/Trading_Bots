@@ -8,14 +8,10 @@ Bots de trading automatizados en MQL5 para MetaTrader 5 (MT5). Contiene expertos
 
 <table style="table-layout:fixed; width:100%;">
   <tr>
-    <th style="text-align:center; width:220px; min-width:220px; max-width:220px;">Bot</th>
-    <th style="text-align:center;">Descripción</th>
+    <td colspan="2" style="text-align:center; background-color:#f0f0f0; padding:10px; font-weight:bold;">Bandas de Bollinger</td>
   </tr>
   <tr>
-    <td colspan="2" style="text-align:center; background-color:#f0f0f0; padding:10px;"><b>Bandas de Bollinger</b></td>
-  </tr>
-  <tr>
-    <td style="text-align:center"><img src="Tokyo_Breakers/images/Tokyo_Breakers_logo.png" style="width:200px; min-width:200px; max-width:200px;"/></td>
+    <td style="text-align:center; width:220px; min-width:220px; max-width:220px;"><img src="Tokyo_Breakers/images/Tokyo_Breakers_logo.png" style="width:200px; min-width:200px; max-width:200px;"/></td>
     <td style="text-align:left"><a href="Tokyo_Breakers/README.md"><b>Tokyo_Breakers</b></a></td>
   </tr>
   <tr>
@@ -23,10 +19,10 @@ Bots de trading automatizados en MQL5 para MetaTrader 5 (MT5). Contiene expertos
     <td style="text-align:left"><a href="John_Wick_H4/README.md"><b>John_Wick_H4</b></a></td>
   </tr>
   <tr>
-    <td colspan="2" style="text-align:center; background-color:#f0f0f0; padding:10px;"><b>Estrategias de Rango</b></td>
+    <td colspan="2" style="text-align:center; background-color:#f0f0f0; padding:10px; font-weight:bold;">Estrategias de Rango</td>
   </tr>
   <tr>
-    <td style="text-align:center"><img src="FusRoDah!/images/FusRoDah_centered.png" style="width:200px; min-width:200px; max-width:200px;"/></td>
+    <td style="text-align:center"><img src="FusRoDah!/images/FusRoDah!_logo.png" style="width:200px; min-width:200px; max-width:200px;"/></td>
     <td style="text-align:left"><a href="FusRoDah!/README.md"><b>FusRoDah!</b></a></td>
   </tr>
   <tr>
@@ -34,14 +30,14 @@ Bots de trading automatizados en MQL5 para MetaTrader 5 (MT5). Contiene expertos
     <td style="text-align:left"><a href="Back_to_the_Range/README.md"><b>Back to the Range</b></a></td>
   </tr>
   <tr>
-    <td colspan="2" style="text-align:center; background-color:#f0f0f0; padding:10px;"><b>Reversión</b></td>
+    <td colspan="2" style="text-align:center; background-color:#f0f0f0; padding:10px; font-weight:bold;">Reversión</td>
   </tr>
   <tr>
     <td style="text-align:center"><img src="Pirañas/images/Pirañas_logo.png" style="width:200px; min-width:200px; max-width:200px;"/></td>
     <td style="text-align:left"><a href="Pirañas/README.md"><b>Pirañas</b></a></td>
   </tr>
   <tr>
-    <td colspan="2" style="text-align:center; background-color:#f0f0f0; padding:10px;"><b>Grid Trading</b></td>
+    <td colspan="2" style="text-align:center; background-color:#f0f0f0; padding:10px; font-weight:bold;">Grid Trading</td>
   </tr>
   <tr>
     <td style="text-align:center"><img src="Mecha_Godzilla/images/MECHA-GODZILLA_logo.png" style="width:200px; min-width:200px; max-width:200px;"/></td>
