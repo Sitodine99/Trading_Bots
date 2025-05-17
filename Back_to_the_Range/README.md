@@ -1,6 +1,6 @@
 # Back to the Range
 
-![Back to the Range Logo](images/BackToTheRange_logo.png)
+![Back to the Range Logo](images/Back_to_the_Range_logo.png)
 
 **Back to the Range** es un **Expert Advisor (EA)** desarrollado para **MetaTrader 5**, diseñado para operar exclusivamente en **índices** como US500, US100, US30, entre otros, en el marco temporal configurado por el usuario. Este bot automatiza operaciones basadas en una estrategia de **retorno al rango**, identificando niveles de liquidez durante un periodo de recolección de datos y operando cuando el precio cruza estos niveles, buscando capturar movimientos de reversión hacia el rango. Incorpora una gestión de riesgo robusta alineada con los requisitos de desafíos de fondeo como **FTMO**, asegurando un equilibrio entre rentabilidad y protección de capital.
 
