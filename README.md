@@ -1,16 +1,10 @@
-# Trading_Bots 🤖
-
-Bots de trading automatizados en MQL5 para MetaTrader 5 (MT5). Contiene expertos asesores (EAs) y herramientas enfocadas en estrategias de trading algorítmico para mercados financieros.
-
----
-
 ## Bots Disponibles
 
 <table style="table-layout:fixed; width:100%;">
   <tr>
-    <td colspan="2" style="text-align:center; background-color:#f0f0f0; padding:10px; font-weight:bold;">
+    <th colspan="2" style="text-align:center; background-color:#f0f0f0; padding:10px;">
       Bandas de Bollinger
-    </td>
+    </th>
   </tr>
   <tr>
     <td style="text-align:left; width:220px; min-width:220px; max-width:220px;">
@@ -30,9 +24,9 @@ Bots de trading automatizados en MQL5 para MetaTrader 5 (MT5). Contiene expertos
   </tr>
 
   <tr>
-    <td colspan="2" style="text-align:center; background-color:#f0f0f0; padding:10px; font-weight:bold;">
+    <th colspan="2" style="text-align:center; background-color:#f0f0f0; padding:10px;">
       Estrategias de Rango
-    </td>
+    </th>
   </tr>
   <tr>
     <td style="text-align:left;">
@@ -52,9 +46,9 @@ Bots de trading automatizados en MQL5 para MetaTrader 5 (MT5). Contiene expertos
   </tr>
 
   <tr>
-    <td colspan="2" style="text-align:center; background-color:#f0f0f0; padding:10px; font-weight:bold;">
+    <th colspan="2" style="text-align:center; background-color:#f0f0f0; padding:10px;">
       Reversión
-    </td>
+    </th>
   </tr>
   <tr>
     <td style="text-align:left;">
@@ -66,9 +60,9 @@ Bots de trading automatizados en MQL5 para MetaTrader 5 (MT5). Contiene expertos
   </tr>
 
   <tr>
-    <td colspan="2" style="text-align:center; background-color:#f0f0f0; padding:10px; font-weight:bold;">
+    <th colspan="2" style="text-align:center; background-color:#f0f0f0; padding:10px;">
       Grid Trading
-    </td>
+    </th>
   </tr>
   <tr>
     <td style="text-align:left;">
@@ -79,16 +73,3 @@ Bots de trading automatizados en MQL5 para MetaTrader 5 (MT5). Contiene expertos
     </td>
   </tr>
 </table>
-
----
-
-## Cómo Usar Este Repositorio
-
-1. Cada bot está en su propio subdirectorio con un `README.md` detallado.  
-2. Haz clic en el nombre del bot para ver su documentación completa y configuraciones.  
-3. Asegúrate de tener MetaTrader 5 y el MetaEditor para compilar los archivos `.mq5`.  
-
-## Notas
-
-- Este es un repositorio privado para desarrollo interno.  
-- Cada bot incluye su propia licencia en su subdirectorio.  
