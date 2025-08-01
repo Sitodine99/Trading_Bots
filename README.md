@@ -69,7 +69,7 @@
       <a href="Mecha_Godzilla/README.md"><b>Mecha-Godzilla</b></a>
     </td>
     <td style="text-align:left;">
-      EA para cualquier activo en MT5 que implementa una estrategia de grid trading con niveles de precio configurables, filtro ATR y coberturas opcionales; incluye gestión de riesgo avanzada —Stop Loss, Take Profit, Trailing Stop, hedging y límites de pérdida diaria— optimizada para desafíos de fondeo FTMO. ADVERTENCIA: FTMO no suele aprobar bots de grid trading, por lo que se requiere supervisión continua y ajustes cuidadosos.
+      EA para cualquier activo en MT5 que implementa una estrategia de grid trading con niveles de precio configurables, filtro ATR y coberturas opcionales; incluye gestión de riesgo avanzada —Stop Loss, Take Profit, Trailing Stop, hedging y límites de pérdida diaria— optimizada para desafíos de fondeo. ADVERTENCIA: FTMO no suele aprobar bots de grid trading, por lo que se requiere supervisión continua y ajustes cuidadosos.
     </td>
   </tr>
 </table>
