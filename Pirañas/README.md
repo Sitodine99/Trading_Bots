@@ -100,7 +100,7 @@ Esta gestión de riesgos hace que **Pirañas** sea ideal para desafíos de fonde
 
 ## 📊 Resultados de Simulación
 
-**John Wick H4** ha sido evaluado con datos reales en MetaTrader 5 usando una simulación con parámetros optimizados.
+**Pirañas** ha sido evaluado con datos reales en MetaTrader 5 usando una simulación con parámetros optimizados.
 - **[Resultados de Simulación](Simulaciones%20y%20optimizaciones/README.md)**
 
 ---
