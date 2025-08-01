@@ -81,59 +81,33 @@ Simulado en MetaTrader 5 con datos reales y parámetros optimizados:
 
 ## 🧾 Parámetros Configurables
 
-### Bandas de Bollinger
+## 🧾 Parámetros Configurables
 
-| Parámetro       | Descripción                                   | Por defecto |
-|-----------------|-----------------------------------------------|-------------|
-| `BB_Period`     | Periodo de las Bandas de Bollinger            | 15          |
-| `BB_Deviation`  | Desviación estándar para las bandas           | 1.4         |
-
-### Momentum
-
-| Parámetro             | Descripción                              | Por defecto |
-|-----------------------|------------------------------------------|-------------|
-| `Momentum_Period`     | Período del indicador Momentum           | 14          |
-| `Momentum_Buy_Level`  | Umbral de Momentum para compras          | 101.5       |
-| `Momentum_Sell_Level` | Umbral de Momentum para ventas           | 99.5        |
-
-### Riesgo y Operaciones
-
-| Parámetro                | Descripción                                 | Por defecto |
-|--------------------------|---------------------------------------------|-------------|
-| `LotSize`                | Tamaño de lote inicial                      | 0.3         |
-| `SL_Points`              | Stop Loss (puntos)                          | 400         |
-| `TP_Points`              | Take Profit (puntos)                        | 300         |
-| `UseTrailingStop`        | Activar Trailing Stop                       | true        |
-| `TrailingStopActivation` | Puntos para activar Trailing Stop           | 200         |
-| `TrailingStopStep`       | Paso del Trailing Stop (puntos)             | 200         |
-| `MaxPositions`           | Máx. posiciones abiertas por dirección      | 2           |
-
-### Multiplicador de Contratos
-
-| Parámetro               | Descripción                                 | Por defecto |
-|-------------------------|---------------------------------------------|-------------|
-| `UseComboMultiplier`    | Activar multiplicador tras ganancia         | true        |
-| `ComboMultiplier`       | Multiplicador de lote                       | 1.6         |
-| `MaxContractSize`       | Tamaño máximo de lote                       | 1.5         |
-| `MaxComboSteps`         | Máx. rachas de multiplicación consecutivas  | 2           |
-
-### Breakout en la misma vela (opcional)
-
-| Parámetro                | Descripción                                | Por defecto |
-|--------------------------|--------------------------------------------|-------------|
-| `UseBreakoutDistance`    | Activar entrada sin cierre previo          | false       |
-| `BreakoutDistancePoints` | Distancia mínima para ruptura (puntos)     | 167         |
-
-### Gestión de Cuenta (FTMO y Similares)
-
-| Parámetro               | Descripción                                          | Por defecto |
-|-------------------------|------------------------------------------------------|-------------|
-| `MaxDailyLossFTMO`      | Pérdida diaria máxima permitida (USD)                | 500.0       |
-| `SafetyBeltFactor`      | Factor de seguridad sobre pérdida diaria (0.0–1.0)   | 0.5         |
-| `UseBalanceTarget`      | Activar objetivo de balance                          | false       |
-| `BalanceTarget`         | Meta de balance para cierre (USD)                    | 11000.0     |
-| `MinOperatingBalance`   | Saldo mínimo operativo (USD)                         | 9050.0      |
-
+| Parámetro                  | Descripción                                                 | Por defecto |
+|----------------------------|-------------------------------------------------------------|-------------|
+| `BB_Period`                | Periodo de las Bandas de Bollinger                          | 15          |
+| `BB_Deviation`             | Desviación estándar para las Bandas de Bollinger            | 1.4         |
+| `Momentum_Period`          | Período del indicador Momentum                              | 14          |
+| `Momentum_Buy_Level`       | Umbral de Momentum para abrir compras                       | 101.5       |
+| `Momentum_Sell_Level`      | Umbral de Momentum para abrir ventas                        | 99.5        |
+| `LotSize`                  | Tamaño de lote inicial                                       | 0.3         |
+| `SL_Points`                | Stop Loss en puntos                                          | 400         |
+| `TP_Points`                | Take Profit en puntos                                        | 300         |
+| `UseTrailingStop`          | Activar o desactivar Trailing Stop                           | true        |
+| `TrailingStopActivation`   | Puntos de beneficio para activar Trailing Stop               | 200         |
+| `TrailingStopStep`         | Paso del Trailing Stop en puntos                             | 200         |
+| `MaxPositions`             | Máximo de posiciones abiertas por dirección                  | 2           |
+| `UseComboMultiplier`       | Activar o desactivar multiplicador de contratos tras ganancia| true        |
+| `ComboMultiplier`          | Factor de aumento de lote tras operación ganadora            | 1.6         |
+| `MaxContractSize`          | Tamaño máximo de lote                                        | 1.5         |
+| `MaxComboSteps`            | Máximo número de multiplicaciones consecutivas               | 2           |
+| `UseBreakoutDistance`      | Activar entrada en la misma vela si hay ruptura              | false       |
+| `BreakoutDistancePoints`   | Distancia mínima para confirmar ruptura (puntos)             | 167         |
+| `MaxDailyLossFTMO`         | Pérdida diaria máxima permitida (USD)                        | 500.0       |
+| `SafetyBeltFactor`         | Factor de seguridad sobre la pérdida diaria (0.0–1.0)        | 0.5         |
+| `UseBalanceTarget`         | Activar objetivo de saldo                                    | false       |
+| `BalanceTarget`            | Meta de balance para cerrar el EA (USD)                      | 11000.0     |
+| `MinOperatingBalance`      | Saldo mínimo operativo (USD)                                 | 9050.0      |
 
 ---
 
