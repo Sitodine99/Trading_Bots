@@ -72,4 +72,18 @@
       EA para cualquier activo en MT5 que implementa una estrategia de grid trading con niveles de precio configurables, filtro ATR y coberturas opcionales; incluye gestión de riesgo avanzada —Stop Loss, Take Profit, Trailing Stop, hedging y límites de pérdida diaria— optimizada para desafíos de fondeo. ADVERTENCIA: FTMO no suele aprobar bots de grid trading, por lo que se requiere supervisión continua y ajustes cuidadosos.
     </td>
   </tr>
+
+    <tr>
+    <th colspan="2" style="text-align:center; background-color:#f0f0f0; padding:10px;">
+      Swing Breakouts
+    </th>
+  </tr>
+  <tr>
+    <td style="text-align:left; width:220px; min-width:220px; max-width:220px;">
+      <a href="One_Piece/README.md"><b>One_Piece</b></a>
+    </td>
+    <td style="text-align:left;">
+      EA para XAUUSD que detecta rupturas de swing highs/lows (Market Structure Shift) en cualquier timeframe. Incluye gestión de riesgo FTMO avanzada —Stop Loss, Take Profit, Trailing Stop dinámico, límite de pérdida diaria con Safety Belt, reinicio diario, objetivo de balance y máximo de posiciones— optimizado para retos de fondeo.
+    </td>
+  </tr>
 </table>
