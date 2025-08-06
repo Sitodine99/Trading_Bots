@@ -89,7 +89,7 @@ Esta simulación fue realizada para el Expert Advisor **One_Piece_v01** en MetaT
 
 ## 🎲 Gráfico de Rendimiento
 
-![Gráfico General](Simulaciones%20y%20optimizaciones/ReportTester-OnePiece.png)
++ ![Gráfico General](ReportTester-OnePiece.png)
 
 ---
 

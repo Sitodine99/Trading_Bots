@@ -80,7 +80,7 @@
   </tr>
   <tr>
     <td style="text-align:left; width:220px; min-width:220px; max-width:220px;">
-      <a href="One_Piece/README.md"><b>One_Piece</b></a>
+      <a href="One_Piece_v01/README.md"><b>One_Piece</b></a>
     </td>
     <td style="text-align:left;">
       EA para XAUUSD que detecta rupturas de swing highs/lows (Market Structure Shift) en cualquier timeframe. Incluye gestión de riesgo FTMO avanzada —Stop Loss, Take Profit, Trailing Stop dinámico, límite de pérdida diaria con Safety Belt, reinicio diario, objetivo de balance y máximo de posiciones— optimizado para retos de fondeo.
