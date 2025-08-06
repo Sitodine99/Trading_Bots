@@ -1,6 +1,7 @@
-## Bots Disponibles
+# Bots Disponibles
 
 <table style="table-layout:fixed; width:100%;">
+  <!-- Bandas de Bollinger -->
   <tr>
     <th colspan="2" style="text-align:center; background-color:#f0f0f0; padding:10px;">
       Bandas de Bollinger
@@ -23,6 +24,7 @@
     </td>
   </tr>
 
+  <!-- Estrategias de Rango -->
   <tr>
     <th colspan="2" style="text-align:center; background-color:#f0f0f0; padding:10px;">
       Estrategias de Rango
@@ -45,6 +47,7 @@
     </td>
   </tr>
 
+  <!-- Reversión -->
   <tr>
     <th colspan="2" style="text-align:center; background-color:#f0f0f0; padding:10px;">
       Reversión
@@ -59,6 +62,7 @@
     </td>
   </tr>
 
+  <!-- Grid Trading -->
   <tr>
     <th colspan="2" style="text-align:center; background-color:#f0f0f0; padding:10px;">
       Grid Trading
@@ -73,7 +77,8 @@
     </td>
   </tr>
 
-    <tr>
+  <!-- Swing Breakouts -->
+  <tr>
     <th colspan="2" style="text-align:center; background-color:#f0f0f0; padding:10px;">
       Swing Breakouts
     </th>
