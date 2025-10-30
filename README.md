@@ -47,6 +47,21 @@
     </td>
   </tr>
 
+  <!-- Seguidores de Tendencia -->
+  <tr>
+    <th colspan="2" style="text-align:center; background-color:#f0f0f0; padding:10px;">
+      Seguidores de Tendencia
+    </th>
+  </tr>
+  <tr>
+    <td style="text-align:left; width:220px; min-width:220px; max-width:220px;">
+      <a href="Bueno_Feo_Malo/README.md"><b>Bueno, Feo y Malo</b></a>
+    </td>
+    <td style="text-align:left;">
+      EA compatible con cualquier símbolo y marco temporal que detecta un patrón de 3 velas consecutivas con cuerpo mínimo, y coloca órdenes pendientes solo si el precio se encuentra a favor de la tendencia determinada por una SMA en marco temporal superior (MTF). Estrategia clara y directa, ideal como <b>seguidor de tendencia discrecional</b>. Incluye Stop Loss, Take Profit, Trailing Stop, cancelación inteligente de órdenes, multiplicador de lotes tras ganadora, gestión de riesgo FTMO con límite de pérdida diaria, balance mínimo y objetivo de beneficios. Persistencia de estado incluida para trading consistente entre sesiones.
+    </td>
+  </tr>
+
   <!-- Reversión -->
   <tr>
     <th colspan="2" style="text-align:center; background-color:#f0f0f0; padding:10px;">
