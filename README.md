@@ -23,6 +23,14 @@
       EA para AUDCAD en H4 que ejecuta rupturas de Bandas de Bollinger con salidas en la banda media, e integra gestión de riesgo avanzada —Stop Loss, Trailing Stop dinámico, multiplicador de lotes y límites de pérdida diaria— optimizada para cumplir con los requisitos de fondeo FTMO.
     </td>
   </tr>
+  <tr>
+    <td style="text-align:left;">
+      <a href="FinalHorizon/README.md"><b>FinalHorizon</b></a>
+    </td>
+    <td style="text-align:left;">
+      EA para índices americanos (probado sobre US500) en timeframe configurable (H1, H2, H3, H4) que opera el cruce de la banda media de Bollinger: compra en el cruce de abajo a arriba, vende en el cruce de arriba a abajo. La salida es dinámica, no un SL/TP fijo: la posición se cierra al tocar la banda extrema vigente en cada momento, a favor o en contra. El tamaño de posición usa lote fijo parametrizable (en fase de calibración inicial, pendiente de un escalado por tramos de balance) y un límite configurable de posiciones simultáneas (por defecto 1). Aún en fase de optimización y validación fuera de muestra — sin gestión de riesgo FTMO todavía.
+    </td>
+  </tr>
 
   <!-- Estrategias de Rango -->
   <tr>
