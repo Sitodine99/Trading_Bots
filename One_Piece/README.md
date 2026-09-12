@@ -2,7 +2,7 @@
 
 ![One Piece Logo](images/One_Piece_logo.png)
 
-**One Piece** es un **Expert Advisor (EA)** para **MetaTrader 5**, diseñado para operar en **XAUUSD** en **cualquier marco temporal**, aunque ideal en H1. Automatiza entradas basadas en **rupturas de swing highs/lows** y **Market Structure Shifts (MSS)**, con confirmación opcional por cierre de vela. Incorpora gestión de riesgo avanzada —Stop Loss, Take Profit, Trailing Stop dinámico, límite de pérdida diaria con “safety belt”, reinicio diario, objetivo de balance y máximo de posiciones— optimizado para desafíos de fondeo como **FTMO**.
+**One Piece** es un **Expert Advisor (EA)** para **MetaTrader 5**, diseñado para operar en **XAUUSD** en **cualquier marco temporal**, aunque ideal en H1. Automatiza entradas basadas en **rupturas de swing highs/lows** y **Market Structure Shifts (MSS)**, con confirmación opcional por cierre de vela. Incorpora gestión de riesgo avanzada —Stop Loss, Take Profit, Trailing Stop dinámico, límite de pérdida diaria con “safety belt”, reinicio diario, objetivo de balance, máximo de posiciones y **escalado automático de lote por equity**— optimizado para desafíos de fondeo como **FTMO**.
 
 ---
 
@@ -22,6 +22,7 @@
   - **Reinicio diario** automático a las 00:00 (hora España).  
   - **Objetivo de balance** (`BalanceTarget`): cierra todo al lograrse y detiene el EA.  
   - **Saldo mínimo operativo** (`MinOperatingBalance`): detiene trading si el equity cae por debajo.  
+- **Escalado automático de lote**: incrementa el lote base en pasos fijos según la equity de la cuenta (ver tabla de parámetros).  
 - **Control de posiciones**: hasta `MaxPositions` abiertas simultáneamente.  
 - **Validaciones**:  
   - Solo funciona en XAUUSD (falla en OnInit si el símbolo es distinto).  
@@ -39,12 +40,12 @@
 2. **Señales de Compra**  
    - `Ask` supera el último **swing high** (o vela cierra por encima si está activo).  
    - Calcula SL = Ask − `SL_Points`·_Point, TP = Ask + `TP_Points`·_Point.  
-   - Abre orden `Buy` con lote normalizado.  
+   - Abre orden `Buy` con lote normalizado (según escalado automático vigente).  
 
 3. **Señales de Venta**  
    - `Bid` rompe el último **swing low** (o vela cierra por debajo si está activo).  
    - Calcula SL = Bid + `SL_Points`·_Point, TP = Bid − `TP_Points`·_Point.  
-   - Abre orden `Sell` con lote normalizado.  
+   - Abre orden `Sell` con lote normalizado (según escalado automático vigente).  
 
 4. **Market Structure Shift**  
    - Compara los dos últimos swing highs/lows para detectar un cambio de estructura.  
@@ -52,6 +53,9 @@
 
 5. **Trailing Stop**  
    - Si `UseTrailingStop==true`, ajusta SL tras `TrailingStopActivation` puntos de ganancia.  
+
+6. **Escalado de Lote**  
+   - Tras cada cierre de posición, recalcula el lote base según la equity actual: `MinLotSize` desde `ScalingBaseEquity`, +`ScalingLotStep` por cada `ScalingEquityStep` adicional de equity, hasta el tope `MaxContractSize`.  
 
 ---
 
@@ -64,6 +68,7 @@
 - **Objetivo de Balance** (`BalanceTarget`, `UseBalanceTarget`).  
 - **Saldo Mínimo** (`MinOperatingBalance`).  
 - **Máximo de Posiciones** (`MaxPositions`).  
+- **Escalado Automático de Lote** (`UseAutoScaling`, `MinLotSize`, `ScalingBaseEquity`, `ScalingEquityStep`, `ScalingLotStep`, `MaxContractSize`).  
 - **Normalización de lote** según `SYMBOL_VOLUME_STEP`, mínimo/máximo del bróker.  
 - **Validación de SL/TP** contra `SYMBOL_TRADE_STOPS_LEVEL`.  
 
@@ -71,8 +76,23 @@
 
 ## 📊 Resultados de Simulación
 
-Simulado en MetaTrader 5 con datos históricos de XAUUSD y parámetros optimizados para FTMO:  
-– [Ver resultados y optimizaciones](Simulaciones%20y%20optimizaciones/README.md)
+Backtest de referencia sobre la configuración actualmente operada en real (auto-escalado incluido), MetaTrader 5, IC Markets (EU) Ltd, cuenta USD, apalancamiento 1:30.
+
+**Periodo:** XAUUSD H1, 2024.01.01 – 2026.09.12 · **Calidad del histórico:** 100% ticks reales · **Depósito inicial:** $500
+
+| Métrica | Valor |
+|---|---|
+| Operaciones cerradas | 401 |
+| Beneficio neto | +$1.890,87 |
+| Profit factor | 1,29 |
+| Win rate | 59,35% |
+| Beneficio esperado/operación | $4,72 (≈0,16R) |
+| Drawdown máximo (balance) | −27,51% ($860,53) |
+| Drawdown relativo máximo | −30,84% |
+| Ratio de Sharpe | 3,31 |
+| Factor de recuperación | 1,93 |
+
+*Nota: el drawdown de esta configuración es mayor que el de una versión con lote fijo (referencia histórica: −20,42% con 0.01 lotes fijos), porque el escalado automático amplifica el riesgo en dólares y en % relativo durante las rachas de pérdidas que llegan después de que la cuenta haya crecido. Es un efecto esperado del escalado, no un fallo de la estrategia.*
 
 ---
 
@@ -87,23 +107,33 @@ Simulado en MetaTrader 5 con datos históricos de XAUUSD y parámetros optimizad
 
 ---
 
-## 🧾 Parámetros Configurables
+## 🧾 Parámetros Configurables (configuración real operada actualmente)
 
-| Parámetro                  | Descripción                                             | Por defecto |
-|----------------------------|---------------------------------------------------------|-------------|
-| `LotSize`                  | Tamaño de lote inicial (lotes)                          | 0.06        |
-| `SL_Points`                | Stop Loss en puntos gráficos                            | 2860        |
-| `TP_Points`                | Take Profit en puntos gráficos                          | 1690        |
+| Parámetro                  | Descripción                                             | Valor real |
+|-----------------------------|---------------------------------------------------------|-------------|
+| `LotSize`                  | Lote fijo de respaldo (solo si `UseAutoScaling=false`)  | 0.01        |
+| `SL_Points`                | Stop Loss en puntos gráficos                            | 1920        |
+| `TP_Points`                | Take Profit en puntos gráficos                          | 1850        |
 | `MaxPositions`             | Máximo de posiciones abiertas simultáneas               | 1           |
-| `UseTrailingStop`          | Activar Trailing Stop                                   | true        |
-| `TrailingStopActivation`   | Puntos para activar Trailing Stop                       | 1500        |
-| `TrailingStopStep`         | Paso del Trailing Stop en puntos                        | 800         |
+| `UseTrailingStop`          | Activar Trailing Stop                                   | false       |
+| `TrailingStopActivation`   | Puntos para activar Trailing Stop                       | 1920        |
+| `TrailingStopStep`         | Paso del Trailing Stop en puntos                        | 1850        |
 | `ConfirmBreakoutWithClose` | Confirmar ruptura con cierre de vela                    | false       |
-| `MaxDailyLossFTMO`         | Pérdida diaria máxima permitida (USD)                   | 500.0       |
+| `UseAutoScaling`           | Activar escalado automático de lote por equity          | true        |
+| `MinLotSize`               | Lote mínimo / lote en el escalón base                   | 0.01        |
+| `ScalingBaseEquity`        | Equity a partir de la cual aplica `MinLotSize`          | 570.0       |
+| `ScalingEquityStep`        | Incremento de equity por cada escalón de lote           | 570.0       |
+| `ScalingLotStep`           | Incremento de lote por escalón                          | 0.01        |
+| `MaxContractSize`          | Tope de seguridad al lote escalado                      | 2.0         |
+| `MaxDailyLossFTMO`         | Pérdida diaria máxima permitida (USD)                   | 5000.0      |
 | `SafetyBeltFactor`         | Factor de seguridad sobre la pérdida diaria (0.0–1.0)   | 0.95        |
-| `MinOperatingBalance`      | Saldo mínimo operativo (USD)                            | 9050.0      |
-| `UseBalanceTarget`         | Activar objetivo de balance                             | true        |
-| `BalanceTarget`            | Meta de balance para cerrar el EA (USD)                 | 11000.0     |
+| `MinOperatingBalance`      | Saldo mínimo operativo (USD)                            | 1.0         |
+| `UseBalanceTarget`         | Activar objetivo de balance                             | false       |
+| `BalanceTarget`            | Meta de balance para cerrar el EA (USD)                 | 110001.0    |
+| `SwingLength`              | Nº de velas para detectar swings                        | 10          |
+| `MaxScanBars`              | Máximo de barras para el scan histórico al iniciar      | 1500        |
+
+⚠️ **Aviso conocido:** el escalado automático de lote sube o baja el lote solo en función de la equity, en cada cierre de operación. No comprueba win rate, profit factor ni si hay un drawdown activo en curso antes de subir de escalón — a diferencia de la política de escalado manual documentada para este bot, que exige esas tres condiciones. En el backtest de referencia esto llegó a producir al menos una subida de lote con un drawdown activo del −25,7% desde máximos. Tenlo en cuenta al leer el rendimiento en real.
 
 ---
 
@@ -119,4 +149,3 @@ Simulado en MetaTrader 5 con datos históricos de XAUUSD y parámetros optimizad
 ## 🪪 Licencia
 
 © Jose Antonio Montero. Sujeto a los términos de la [MIT License](LICENSE.md).
-

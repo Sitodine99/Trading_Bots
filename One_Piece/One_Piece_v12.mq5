@@ -1,11 +1,11 @@
-﻿//+------------------------------------------------------------------+
-//|                                                 One_Piece.v12.mq5|
+//+------------------------------------------------------------------+
+//|                                                 One_Piece.v13.mq5|
 //|                                              Jose Antonio Montero|
 //|                         https://www.linkedin.com/in/joseamontero/|
 //+------------------------------------------------------------------+
 #property copyright "Copyright 2024, MetaQuotes Ltd."
 #property link      "https://www.mql5.com"
-#property version   "1.05"
+#property version   "1.06"
 
 #include <Trade\Trade.mqh> // Incluir biblioteca para operaciones
 
@@ -17,17 +17,25 @@ input group "General"
 input ENUM_TIMEFRAMES TimeFrame = PERIOD_CURRENT; // Marco temporal para el análisis
 
 input group "Gestión de Riesgo"
-input double LotSize = 0.6;                 // Volumen de la operación (lotes)
+input double LotSize = 0.01;                 // Volumen fijo (solo se usa si UseAutoScaling = false)
 input int    SL_Points = 1920;               // Stop Loss en puntos gráficos
 input int    TP_Points = 1850;               // Take Profit en puntos gráficos
 input int    MaxPositions = 1;               // Máximo número de posiciones abiertas
 
-input bool   UseTrailingStop = true;         // Activar/desactivar Trailing Stop
+input bool   UseTrailingStop = false;        // Activar/desactivar Trailing Stop (config real: OFF)
 input int    TrailingStopActivation = 1900;  // Puntos para activar el trailing (beneficio)
 input int    TrailingStopStep = 1120;         // Paso en puntos del trailing (bloques)
 
 input group "Confirmaciones Adicionales"
 input bool ConfirmBreakoutWithClose = false; // Confirmar ruptura con cierre de vela
+
+input group "Escalado Automático de Lote"
+input bool   UseAutoScaling = true;          // Activar escalado automático de lote por equity
+input double MinLotSize = 0.01;              // Lote mínimo / lote en el escalón base
+input double ScalingBaseEquity = 570.0;      // Equity a partir de la cual aplica MinLotSize (depósito inicial)
+input double ScalingEquityStep = 570.0;      // Incremento de equity por cada escalón de lote
+input double ScalingLotStep = 0.01;          // Incremento de lote por escalón
+input double MaxContractSize = 1.0;          // *** REVISAR *** Tope de seguridad al lote escalado — no confirmado contigo, ajústalo antes de operar en real
 
 input group "Gestión de Cuenta (FTMO y Similares)"
 input double MaxDailyLossFTMO = 5000.0;       // Pérdida diaria máxima permitida (USD)
@@ -54,6 +62,73 @@ double pendingSwingHigh = -1.0;
 double pendingSwingLow = -1.0;
 
 ENUM_TIMEFRAMES used_period;
+
+double base_lot_size;             // Lote base vigente (fijo, o calculado por escalado automático)
+
+//====================================================================
+// Escalado automático de lote (misma lógica que John Wick H4, adaptada
+// a pasos de equity = depósito inicial en vez de pasos fijos de $300)
+//====================================================================
+double NormalizeLotSize(double lot)
+{
+   double lot_step = SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_STEP);
+   double min_lot  = SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_MIN);
+   double max_lot  = SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_MAX);
+   double normalized_lot = MathRound(lot / lot_step) * lot_step;
+   normalized_lot = MathMax(min_lot, MathMin(max_lot, normalized_lot));
+   int digits = (int)-MathLog10(lot_step);
+   return NormalizeDouble(normalized_lot, digits);
+}
+
+// Calcula el lote que corresponde a la equity/balance actual según los escalones definidos.
+// steps = 0 -> MinLotSize (0.01) desde ScalingBaseEquity ($570)
+// steps = 1 -> +ScalingLotStep al alcanzar ScalingBaseEquity + ScalingEquityStep (~$1.140)
+// steps = 2 -> +ScalingLotStep al alcanzar ~$1.710, etc.
+double CalculateScaledLot(double equity_or_balance)
+{
+   if(!UseAutoScaling)
+      return NormalizeLotSize(LotSize);
+
+   if(equity_or_balance < ScalingBaseEquity)
+      return NormalizeLotSize(MinLotSize);
+
+   int steps = (int)MathFloor((equity_or_balance - ScalingBaseEquity) / ScalingEquityStep);
+   double lot = MinLotSize + steps * ScalingLotStep;
+   lot = MathMin(lot, MaxContractSize);
+   return NormalizeLotSize(lot);
+}
+
+// IMPORTANTE (leer antes de operar en real):
+// Esta función escala el lote SOLO en función de la equity, igual que John Wick H4.
+// La regla de escalado que tenemos acordada para One Piece exige ADEMÁS tres condiciones
+// que este código NO comprueba: (1) que el mes cierre por encima del umbral (no intramensual),
+// (2) win rate rolling 3M >= 55%, (3) profit factor rolling 3M >= 1.2, y ausencia de drawdown
+// activo > 20%. Tal como está escrito, el EA subirá el lote en cuanto la equity cruce el umbral,
+// sin esperar a fin de mes ni comprobar WR/PF/drawdown. Si quieres mantener esas comprobaciones,
+// hay que revisarlo (ver aviso en la respuesta de chat).
+void CheckAutoScaling(bool force_init = false)
+{
+   if(force_init)
+   {
+      base_lot_size = CalculateScaledLot(AccountInfoDouble(ACCOUNT_BALANCE));
+      Print("LOG ESCALADO INICIAL: Balance = $", DoubleToString(AccountInfoDouble(ACCOUNT_BALANCE), 2),
+            " | UseAutoScaling = ", UseAutoScaling, " | Lote base = ", DoubleToString(base_lot_size, 2));
+      return;
+   }
+
+   if(!UseAutoScaling)
+      return;
+
+   double new_base = CalculateScaledLot(AccountInfoDouble(ACCOUNT_BALANCE));
+
+   if(MathAbs(new_base - base_lot_size) > 0.0000001)
+   {
+      Print("LOG ESCALADO: Balance = $", DoubleToString(AccountInfoDouble(ACCOUNT_BALANCE), 2),
+            " | Lote base anterior = ", DoubleToString(base_lot_size, 2),
+            " | Lote base nuevo = ", DoubleToString(new_base, 2));
+      base_lot_size = new_base;
+   }
+}
 
 //====================================================================
 // Auxiliares (nuevas funciones mínimas para persistencia por reconstrucción)
@@ -108,17 +183,6 @@ void ClearSwingBreakObjects()
 //====================================================================
 // utilidades (sin cambios importantes)
 //====================================================================
-double NormalizeLotSize(double lot)
-{
-   double lot_step = SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_STEP);
-   double min_lot  = SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_MIN);
-   double max_lot  = SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_MAX);
-   double normalized_lot = MathRound(lot / lot_step) * lot_step;
-   normalized_lot = MathMax(min_lot, MathMin(max_lot, normalized_lot));
-   int digits = (int)-MathLog10(lot_step);
-   return NormalizeDouble(normalized_lot, digits);
-}
-
 double CalculateRiskUSD(double lot_size, int sl_points)
 {
    double tick_value = SymbolInfoDouble(_Symbol, SYMBOL_TRADE_TICK_VALUE);
@@ -151,7 +215,7 @@ bool ValidateStopLevels(double price, double sl, double tp)
 }
 
 //====================================================================
-// Trailing Stop INSTANTÁNEO y ESCALONADO (sin cambios lógicos)
+// Trailing Stop INSTANTÁNEO y ESCALONADO (sin cambios lógicos, sigue OFF por defecto)
 //====================================================================
 bool ModifySLIfBetter(ulong ticket, double new_sl, double keep_tp)
 {
@@ -199,7 +263,7 @@ void ManageTrailingStop(ulong ticket)
                           ? (current_price - open_price) / _Point
                           : (open_price - current_price) / _Point;
 
-   if(points_profit < TrailingStopActivation) 
+   if(points_profit < TrailingStopActivation)
    {
       return;
    }
@@ -254,6 +318,7 @@ void CloseAllPositions()
             Print("LOG ERROR: No se pudo cerrar posición #", ticket, ": ", trade.ResultRetcodeDescription());
       }
    }
+   Print("LOG LOTE BASE VIGENTE TRAS CIERRE MASIVO: ", DoubleToString(base_lot_size, 2));
 }
 
 //====================================================================
@@ -332,6 +397,11 @@ int OnInit()
       Print("LOG Error: TrailingStopActivation y TrailingStopStep deben ser > 0");
       return INIT_PARAMETERS_INCORRECT;
    }
+   if (UseAutoScaling && (ScalingBaseEquity <= 0 || ScalingEquityStep <= 0 || ScalingLotStep <= 0 || MinLotSize <= 0))
+   {
+      Print("LOG Error: Parámetros de escalado inválidos (deben ser > 0)");
+      return INIT_PARAMETERS_INCORRECT;
+   }
 
    // Vars de gestión de riesgo
    daily_start_balance = AccountInfoDouble(ACCOUNT_BALANCE);
@@ -350,24 +420,26 @@ int OnInit()
       Print("LOG INICIO: Límite de pérdida diaria establecido en $", DoubleToString(effective_max_daily_loss, 2));
    }
 
-   // Info inicial
-   double contract_size = SymbolInfoDouble(_Symbol, SYMBOL_TRADE_CONTRACT_SIZE);
-   double tick_value   = SymbolInfoDouble(_Symbol, SYMBOL_TRADE_TICK_VALUE);
-   double normalized_lot = NormalizeLotSize(LotSize);
+   // Escalado de lote: fija base_lot_size según equity actual
+   CheckAutoScaling(true);
 
-   if (normalized_lot < SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_MIN))
+   if (base_lot_size < SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_MIN))
    {
-      Print("LOG Error: LotSize ", DoubleToString(LotSize, 2), " es menor que el mínimo permitido (",
+      Print("LOG Error: Lote base calculado ", DoubleToString(base_lot_size, 2), " es menor que el mínimo permitido (",
             DoubleToString(SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_MIN), 2), ")");
       return INIT_PARAMETERS_INCORRECT;
    }
 
-   double risk_usd = CalculateRiskUSD(normalized_lot, SL_Points);
-   Print("LOG One Piece v01 Inicializado | Símbolo: ", _Symbol,
+   // Info inicial
+   double contract_size = SymbolInfoDouble(_Symbol, SYMBOL_TRADE_CONTRACT_SIZE);
+   double tick_value   = SymbolInfoDouble(_Symbol, SYMBOL_TRADE_TICK_VALUE);
+
+   double risk_usd = CalculateRiskUSD(base_lot_size, SL_Points);
+   Print("LOG One Piece v13 Inicializado | Símbolo: ", _Symbol,
          " | Spread: ", SymbolInfoInteger(_Symbol, SYMBOL_SPREAD), " puntos",
          " | Contract Size: ", DoubleToString(contract_size, 0),
          " | Tick Value: ", DoubleToString(tick_value, 2),
-         " | LotSize Normalizado: ", DoubleToString(normalized_lot, 2),
+         " | Lote base (escalado): ", DoubleToString(base_lot_size, 2),
          " | Riesgo por operación (SL=", SL_Points, "): ", DoubleToString(risk_usd, 2), " USD");
 
    // ==== RECONSTRUCCIÓN RETROACTIVA DE SWINGS Y BREAKS ====
@@ -485,7 +557,28 @@ void OnDeinit(const int reason)
    // Dejamos como antes: borrar objetos Swing_ y Break_ al quitar el EA
    ObjectsDeleteAll(0, "Swing_", 0);
    ObjectsDeleteAll(0, "Break_", 0);
-   Print("LOG One Piece v01 Finalizado | Motivo: ", reason);
+   Print("LOG One Piece v13 Finalizado | Motivo: ", reason);
+}
+
+//====================================================================
+// Detecta cierres de posición para recalcular el lote escalado
+// (mismo patrón que John Wick H4: se dispara con el balance ya actualizado)
+//====================================================================
+void OnTradeTransaction(const MqlTradeTransaction &trans,
+                        const MqlTradeRequest &request,
+                        const MqlTradeResult &result)
+{
+   if(trans.type == TRADE_TRANSACTION_DEAL_ADD)
+   {
+      if(HistoryDealSelect(trans.deal))
+      {
+         if(HistoryDealGetString(trans.deal, DEAL_SYMBOL) == _Symbol &&
+            HistoryDealGetInteger(trans.deal, DEAL_ENTRY) == DEAL_ENTRY_OUT)
+         {
+            CheckAutoScaling(); // balance ya refleja este cierre
+         }
+      }
+   }
 }
 
 //====================================================================
@@ -558,12 +651,12 @@ void OnTick()
    static bool isNewBar = false;
    int currBars = iBars(_Symbol, used_period);
    static int prevBars = currBars;
-   if (prevBars == currBars) { 
-      isNewBar = false; 
+   if (prevBars == currBars) {
+      isNewBar = false;
    }
-   else { 
-      isNewBar = true; 
-      prevBars = currBars; 
+   else {
+      isNewBar = true;
+      prevBars = currBars;
    }
 
    int length = MathMax(1, SwingLength);
@@ -612,10 +705,10 @@ void OnTick()
             ConfirmBreakoutWithClose ? "Cierre (" + DoubleToString(last_close, _Digits) + " > " + DoubleToString(pendingSwingHigh, _Digits) + ")"
                                      : "Precio (" + DoubleToString(Ask, _Digits) + " > " + DoubleToString(pendingSwingHigh, _Digits) + ")");
       int swing_H_index = FindSwingIndex(pendingSwingHigh, true);
-      if (swing_H_index == -1) { 
-         pendingSwingHigh = -1.0; 
+      if (swing_H_index == -1) {
+         pendingSwingHigh = -1.0;
          Print("LOG: Índice de Swing High no encontrado, invalidando pendiente.");
-         return; 
+         return;
       }
 
       bool isMSS_High = false;
@@ -625,13 +718,13 @@ void OnTick()
       double sl_level = NormalizeDouble(Ask - SL_Points * _Point, _Digits);
       double tp_level = NormalizeDouble(Ask + TP_Points * _Point, _Digits);
 
-      if (!ValidateStopLevels(Ask, sl_level, tp_level)) { 
-         pendingSwingHigh = -1.0; 
+      if (!ValidateStopLevels(Ask, sl_level, tp_level)) {
+         pendingSwingHigh = -1.0;
          Print("LOG: Niveles SL/TP inválidos para BUY, invalidando pendiente.");
-         return; 
+         return;
       }
 
-      double lot_size = NormalizeLotSize(LotSize);
+      double lot_size = NormalizeLotSize(MathMin(base_lot_size, MaxContractSize));
       if (lot_size < SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_MIN))
       {
          Print("LOG Error: Tamaño de lote inválido: ", DoubleToString(lot_size, 2));
@@ -669,10 +762,10 @@ void OnTick()
             ConfirmBreakoutWithClose ? "Cierre (" + DoubleToString(last_close, _Digits) + " < " + DoubleToString(pendingSwingLow, _Digits) + ")"
                                      : "Precio (" + DoubleToString(Bid, _Digits) + " < " + DoubleToString(pendingSwingLow, _Digits) + ")");
       int swing_L_index = FindSwingIndex(pendingSwingLow, false);
-      if (swing_L_index == -1) { 
-         pendingSwingLow = -1.0; 
+      if (swing_L_index == -1) {
+         pendingSwingLow = -1.0;
          Print("LOG: Índice de Swing Low no encontrado, invalidando pendiente.");
-         return; 
+         return;
       }
 
       bool isMSS_Low = false;
@@ -682,13 +775,13 @@ void OnTick()
       double sl_level = NormalizeDouble(Bid + SL_Points * _Point, _Digits);
       double tp_level = NormalizeDouble(Bid - TP_Points * _Point, _Digits);
 
-      if (!ValidateStopLevels(Bid, sl_level, tp_level)) { 
-         pendingSwingLow = -1.0; 
+      if (!ValidateStopLevels(Bid, sl_level, tp_level)) {
+         pendingSwingLow = -1.0;
          Print("LOG: Niveles SL/TP inválidos para SELL, invalidando pendiente.");
-         return; 
+         return;
       }
 
-      double lot_size = NormalizeLotSize(LotSize);
+      double lot_size = NormalizeLotSize(MathMin(base_lot_size, MaxContractSize));
       if (lot_size < SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_MIN))
       {
          Print("LOG Error: Tamaño de lote inválido: ", DoubleToString(lot_size, 2));
