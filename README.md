@@ -25,10 +25,10 @@
   </tr>
   <tr>
     <td style="text-align:left;">
-      <a href="FinalHorizon/README.md"><b>FinalHorizon</b></a>
+      <a href="Final_Horizon/README.md"><b>Final_Horizon</b></a>
     </td>
     <td style="text-align:left;">
-      EA para índices americanos (probado sobre US500) en timeframe configurable (H1, H2, H3, H4) que opera el cruce de la banda media de Bollinger: compra en el cruce de abajo a arriba, vende en el cruce de arriba a abajo. La salida es dinámica, no un SL/TP fijo: la posición se cierra al tocar la banda extrema vigente en cada momento, a favor o en contra. El tamaño de posición usa lote fijo parametrizable (en fase de calibración inicial, pendiente de un escalado por tramos de balance) y un límite configurable de posiciones simultáneas (por defecto 1). Aún en fase de optimización y validación fuera de muestra — sin gestión de riesgo FTMO todavía.
+      EA para índices americanos (probado sobre US500) en timeframe configurable (H1, H2, H3, H4; configuración validada: H1, periodo 27, desviación 2.0) que opera el cruce de la banda media de Bollinger: compra en el cruce de abajo a arriba, vende en el cruce de arriba a abajo, confirmado al cierre de vela. La salida es dinámica, no un SL/TP fijo: la posición se cierra al tocar la banda extrema vigente en cada momento, a favor o en contra. El tamaño de posición usa <b>escalado de lote por balance de cuenta</b> (proporcional al balance, con suelo mínimo configurable), aceptando deliberadamente un riesgo alto: drawdown real observado de hasta el 48% en backtest. Límite configurable de posiciones simultáneas (por defecto 1). Validado fuera de muestra (2020-2024) con un profit factor modesto (~1,05-1,10 sin escalado) — sin gestión de riesgo FTMO.
     </td>
   </tr>
 
