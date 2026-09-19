@@ -1,77 +1,55 @@
 //+------------------------------------------------------------------+
-//|                                        MECHA-GODZILLA 27.mq5     |
-//|                                            Jose Antonio Montero  |
-//|                       https://www.linkedin.com/in/joseamontero/  |
+//|                                        MECHA-GODZILLA 31.mq5     |
+//|                                             Jose Antonio Montero  |
+//|                        https://www.linkedin.com/in/joseamontero/  |
 //+------------------------------------------------------------------+
 //
-//  MECHA-GODZILLA 27 — Periodo de gracia del kill switch para no matar
-//  coberturas (unwind) recién abiertas antes de que puedan hacer su trabajo.
+//  MECHA-GODZILLA 31 — Reorganización de parámetros, escalado automático,
+//  limpieza de logs y eliminación del filtro de volatilidad extrema.
 //
-//  CAMBIOS RESPECTO A MECHA-GODZILLA 26:
+//  Evoluciona desde v3.91 → v26 (renombrado, FIFO, filtro de volatilidad) →
+//  v27 (periodo de gracia del kill switch, diagnóstico, fixes de umbral y
+//  ratio de lotes) → v31. El histórico completo de esos cambios queda
+//  documentado en los aprendizajes del proyecto; aquí solo lo que trae esta
+//  versión de nuevo:
 //
-//  [27-1] UseUnwindGraceBars / UnwindGraceBars:
-//    Hallazgo en backtest: el 10/abril/2020 el fast-track abrió 12 coberturas
-//    a las 06:00 y el kill switch de MaxDailyLoss las liquidó TODAS —junto con
-//    el grid— a las 06:03, solo 3 minutos después, sin darles ninguna
-//    oportunidad de compensar la pérdida. En cambio, el episodio del
-//    3-5/junio/2020 (con más tiempo antes de que la pérdida diaria se
-//    recalculara) sí completó el ciclo normalmente (GRID CERRADO → SL LOCK-IN
-//    → COMPLETADO).
-//    Con UseUnwindGraceBars activo: si `MaxDailyLoss` se dispara mientras hay
-//    pares de unwind en FASE 1 (cobertura abierta, grid aún sin cerrar), el
-//    kill switch NO liquida de inmediato — concede UnwindGraceBars barras
-//    para que la cascada intente compensar por sí sola. Si al final del plazo
-//    la pérdida diaria sigue superando el umbral, se liquida todo como antes;
-//    si las coberturas ya compensaron (o la pérdida se recuperó) antes de que
-//    expire el plazo, el kill switch se desactiva sin intervenir.
-//    Es un plazo, no una suspensión indefinida: el respaldo de MaxDailyLoss
-//    sigue existiendo si la cascada también fracasa.
+//  [31-1] ELIMINADO: Filtro de Volatilidad Extrema (UseVolatilityFilter).
+//    Nunca llegó a funcionar bien (comparaba ATR contra su propia media,
+//    demasiado insensible) y se decidió que no hace falta: el grid ya se
+//    gestiona solo con GridGuard (pausa/reanuda por distancia de ATR) y el
+//    FIFO (evita quedarse atrapado meses). Un mecanismo menos que mantener.
 //
-//  CAMBIOS DE MECHA-GODZILLA 26 (mantenidos íntegros):
+//  [31-2] NUEVO: Escalado Automático (UseAutoScaling). Con datos reales de
+//    esta sesión (evento abril 2025 + histórico 2020-2026), se validó que:
+//      · El margen cuesta ~166.67 USD por posición de grid (lote 0.01/0.04).
+//      · 1000 USD → 6 posiciones máx., 2000 USD → 12 (límites de margen
+//        confirmados con fallos reales localizados).
+//      · 12 posiciones supera a 24 en TODO (beneficio, drawdown, factor de
+//        recuperación) — 12 es el techo, no un peldaño más.
+//      · Con lote doble (0.02) a 4000 USD, mismo drawdown y el doble de
+//        beneficio que a 3000/lote 0.01 — confirma que escalar el lote en
+//        vez de las posiciones, a partir de 2000 USD, funciona igual de bien.
+//    Con UseAutoScaling=true, FixedContractSize/UnwindLotSize/MaxGridPositions
+//    dejan de ser los valores que de verdad usa el bot — se calculan solos
+//    según el balance (ver ComputeScalingTargets) y solo se aplican cuando
+//    el grid está completamente vacío, para no romper el lock-in de
+//    coberturas abiertas con el lote anterior (la misma razón por la que
+//    ya se descartó escalar el lote de la cobertura en caliente hace meses).
+//    MaxDailyLoss sigue escalando con el mismo ratio de lote que ya tenía
+//    desde v27.9, tanto en modo manual como automático.
 //
-//  [26-1] Renombrado del EA: v3.91 → MECHA-GODZILLA 26.
+//  [31-3] Reorganización de inputs: Gestión de Posiciones y Gestión de
+//    Cuenta pasan a estar entre los primeros grupos, no los últimos.
+//    Algorithmic Unwinding se divide en tres grupos: parámetros compartidos,
+//    modo cascada (fast-track) y modo lento (tendencia).
 //
-//  [26-2] FIFO: Cierre escalonado por tiempo máximo abierto (UseFIFOTimeLimit):
-//    Si una posición del grid lleva abierta más de FIFOMaxDaysOpen días,
-//    se cierra la más antigua (FIFO — primera en entrar, primera en salir).
-//    Tras cada cierre FIFO se respeta un enfriamiento de FIFOCloseIntervalDays
-//    días antes de forzar el cierre de la siguiente más antigua.
-//    Objetivo: evitar que el grid quede atrapado meses en rango sin poder
-//    operar (encontrado en backtest: 190 días sin una sola operación,
-//    sept-2025 a marzo-2026), liberando cupo para que el grid vuelva a
-//    abrir en la posición actual del mercado.
+//  [31-4] Logs: aperturas y cierres del grid ahora indican el motivo
+//    (cruce de nivel, nivel liberado tras cierre, recuperación de precio) y
+//    el lote efectivo usado. Nuevos logs de escalado (aplicado / esperando a
+//    que el grid se vacíe). Sin cambios en la frecuencia de los logs de
+//    diagnóstico ya existentes (siguen apagados por defecto).
 //
-//  [26-3] Filtro de volatilidad extrema (UseVolatilityFilter):
-//    Compara el ATR de la barra actual contra la media de ATR de las
-//    últimas VolatilityRefPeriod barras. Si el ATR actual supera
-//    VolatilityATRMultiple veces esa referencia, se bloquean NUEVAS
-//    aperturas de grid (no afecta a gestión de lo ya abierto).
-//    Objetivo: reducir el apilamiento de posiciones nuevas durante un
-//    movimiento violento de una sola vela (encontrado en backtest:
-//    12/marzo/2020, stop-out real del bróker al 47.05% de margen, con
-//    varias posiciones abiertas horas antes del colapso).
-//    IMPORTANTE: no protege frente al golpe sobre posiciones YA abiertas
-//    antes de que el ATR se dispare — solo evita añadir más leña al fuego.
-//
-//  TODOS LOS CAMBIOS DE v3.91 Y ANTERIORES SE MANTIENEN INTACTOS.
-//+------------------------------------------------------------------+
-//
-//  HISTÓRICO — MECHA-GODZILLA v3.91 (Fixes del Algorithmic Unwinding)
-//
-//  [v3.91-1] UseUnwindFastTrack / UseUnwindNormalMode separados.
-//  [v3.91-2] Grid unidireccional (GridDirection).
-//  [v3.91-3] Filtro de Hurst (UseHurstFilter).
-//  [v3.91-4] Trailing dinámico con swap de la TF.
-//  [v3.91-5] NormalModeDistancePoints y NormalModeMaxBarsTrapped reducidos.
-//  [BUG-2] Swap incluido en cálculo del lock-in SL.
-//  [MEJORA-1] Time trigger en modo normal (NormalModeMaxBarsTrapped).
-//  [MEJORA-2] UnwindFastTrackLossUSD proporcional al balance.
-//  [MEJORA-3] Confirmación de tendencia en time trigger.
-//+------------------------------------------------------------------+
-
-#property copyright "Jose Antonio Montero"
-#property link      "https://www.linkedin.com/in/joseamontero/"
-#property version   "27.0"
+#property version   "31.0"
 
 #include <Trade\Trade.mqh>
 
@@ -81,7 +59,27 @@
 
 input group "── Configuración General ──"
 input ENUM_TIMEFRAMES Timeframe             = PERIOD_H1;
-input double          InitialBalance        = 1000.0;
+
+input group "── Gestión de Posiciones ──"
+input double FixedContractSize              = 0.01;   // Lote del grid. Si UseAutoScaling=true, es solo el valor
+                                                        // de partida — el bot lo recalcula solo (ver más abajo).
+input bool   UseStopLoss                    = false;
+input double StopLossATRMultiplier          = 5.0;
+input double MinProfitToClose               = 0.30;
+
+input group "── Gestión de Cuenta ──"
+input bool   UseBalanceTarget               = false;
+input double BalanceTarget                  = 605.0;
+input double MinOperatingBalance            = 1.0;
+input double MaxDailyLoss                   = 350.0;   // Base; escala con el lote efectivo (ver UnwindFastTrackRefLot)
+input double SafetyBeltFactor               = 1.0;
+
+input group "── [31] Escalado Automático ──"
+input bool   UseAutoScaling                 = false;   // true: FixedContractSize/UnwindLotSize/MaxGridPositions se
+                                                        // recalculan solos según el balance (tabla validada) y solo
+                                                        // se aplican cuando el grid está vacío. false: se usan tal
+                                                        // cual los valores manuales de arriba y de Grid Dinámico /
+                                                        // Algorithmic Unwinding.
 
 input group "── Centro Automático ──"
 input int    CenterLookbackBars             = 500;
@@ -98,7 +96,8 @@ input double AtrStepMultiplier              = 1.5;
 input int    MaxGridLevels                  = 20;
 input int    MaxPositionsPerLevel           = 2;
 input bool   LimitGridPositions             = true;
-input int    MaxGridPositions               = 12;
+input int    MaxGridPositions               = 12;      // Techo manual. Si UseAutoScaling=true, es solo el valor
+                                                        // de partida — el bot lo recalcula solo.
 
 input group "── GridGuard ──"
 input double PauseMultiplier                = 12.0;  // Grid pausa solo ante movimientos muy grandes
@@ -113,34 +112,38 @@ input bool   UseHurstFilter                 = false;  // Activar filtro de régi
 input int    HurstPeriod                    = 100;    // Barras para calcular el exponente de Hurst
 input double HurstThreshold                 = 0.65;   // H > umbral → tendencia → grid no abre posiciones
 
-input group "── [26] FIFO: Cierre Escalonado por Tiempo ──"
+input group "── FIFO: Cierre Escalonado por Tiempo ──"
 input bool   UseFIFOTimeLimit               = false;  // Activa el cierre forzado de la posición más antigua
 input int    FIFOMaxDaysOpen                = 30;     // Días abierta antes de ser candidata a cierre forzado
 input int    FIFOCloseIntervalDays          = 2;       // Días mínimos entre dos cierres FIFO consecutivos
 
-input group "── [26] Filtro de Volatilidad Extrema ──"
-input bool   UseVolatilityFilter            = false;  // Bloquea nuevas aperturas si el ATR se dispara
-input double VolatilityATRMultiple          = 3.0;    // ATR actual > X × ATR de referencia → bloqueo
-input int    VolatilityRefPeriod            = 20;     // Barras usadas para el ATR de referencia
-
-input group "── Algorithmic Unwinding ──"
-input bool   UseUnwindFastTrack             = true;   // Modo cascada (crash rápido): batch de TFs
-input bool   UseUnwindNormalMode            = false;  // Modo lento (tendencia): una TF por posición
-input double UnwindLotSize                  = 0.04;
-input int    UnwindDistancePoints           = 2000;
-input int    UnwindConfirmCandles           = 3;
-input double UnwindTrailATR                 = 8.0;
-input double UnwindPhase2TrailATR           = 2.0;
-input double UnwindPhase2TrailATRMax        = 5.0;
-input double UnwindPhase2TrailScaleUSD      = 20.0;
+input group "── Unwind: Parámetros Compartidos ──"
+input double UnwindLotSize                  = 0.04;   // Si UseAutoScaling=true, valor de partida — se recalcula solo
 input int    UnwindMinBarsBeforeActivation  = 48;
-input int    MaxBarsTrapped                 = 0;
 input int    UnwindCooldownBars             = 48;
 input double UnwindMinPairProfit            = 0.10;
-input double UnwindFastTrackLossUSD         = 80.0;
-input double UnwindFastTrackPct             = 15.0;
+input double UnwindTrailATR                 = 8.0;     // Trailing de fase 1 (grid aún abierto)
+input double UnwindPhase2TrailATR           = 2.0;     // Trailing de fase 2 (TF corriendo sola), mínimo
+input double UnwindPhase2TrailATRMax        = 5.0;     // Trailing de fase 2, máximo
+input double UnwindPhase2TrailScaleUSD      = 20.0;    // Beneficio extra para llegar del mínimo al máximo
+input int    UnwindCrashMaxBars             = 12;      // ≤ esto = crash (cascada) | > esto = tendencia lenta
+input int    MaxBarsTrapped                 = 0;       // Legacy, sin efecto activo en el código actual
+
+input group "── Unwind: Modo Cascada (Fast-Track) ──"
+input bool   UseUnwindFastTrack             = true;   // Batch: una TF por cada posición atrapada, todas de golpe
+input double UnwindFastTrackLossUSD         = 80.0;    // Umbral fijo en USD, calibrado para lote 0.01 (dato validado)
+input double UnwindFastTrackPct             = 0.0;     // Alternativa en % de balance — desactivada por defecto:
+                                                        // el lote no escala con el balance, así que un umbral en
+                                                        // % de balance se descalibra en cuanto el balance crece
+input double UnwindFastTrackRefLot          = 0.01;    // Lote contra el que están calibrados LossUSD/Pct/MaxDailyLoss.
+                                                        // Con UseAutoScaling=true el umbral efectivo escala solo con
+                                                        // el lote real de cada escalón — no cambiar este valor.
 input int    UnwindFastTrackMinBars         = 1;
-input int    UnwindCrashMaxBars             = 12;
+input int    UnwindDistancePoints           = 2000;
+input int    UnwindConfirmCandles           = 3;
+
+input group "── Unwind: Modo Lento (Tendencia) ──"
+input bool   UseUnwindNormalMode            = false;  // Una TF por posición, activada por distancia o por tiempo
 input int    NormalModeDistancePoints       = 500;
 input int    NormalModeMaxBarsTrapped       = 36;
 input int    NormalModeConfirmCandles       = 2;
@@ -151,22 +154,13 @@ input int    AlertPausedBars                = 48;     // Barras pausado antes de
 input double AlertMinLossUSD                = 20.0;   // Pérdida flotante mínima para alertar (USD)
 input int    AlertCooldownBars              = 96;     // Barras mínimas entre alertas repetidas
 
-input group "── Gestión de Posiciones ──"
-input double FixedContractSize              = 0.02;
-input bool   UseStopLoss                    = false;
-input double StopLossATRMultiplier          = 5.0;
-input double MinProfitToClose               = 0.30;
-
-input group "── Gestión de Cuenta ──"
-input bool   UseBalanceTarget               = false;
-input double BalanceTarget                  = 605.0;
-input double MinOperatingBalance            = 1.0;
-input double MaxDailyLoss                   = 350.0;
-input double SafetyBeltFactor               = 1.0;
-
-input group "── [27] Periodo de Gracia del Kill Switch ──"
+input group "── Periodo de Gracia del Kill Switch ──"
 input int    UnwindGraceBars                = 24;     // Barras de margen antes de liquidar si hay coberturas en fase 1
-                                                        // (0 = comportamiento de v26, liquidación inmediata)
+                                                        // (0 = liquidación inmediata, sin margen para coberturas)
+
+input group "── Diagnóstico (no afecta al trading) ──"
+input bool   UseDiagnosticLog               = false;  // Imprime cada barra el estado de todas las puertas de apertura
+input bool   UseVerboseUnwindLog            = false;  // Imprime cada barra el estado de cada par de cobertura activo
 
 //+------------------------------------------------------------------+
 //  CONSTANTES
@@ -217,11 +211,14 @@ bool     fastTrackActive       = false;
 datetime lastFIFOCloseTime     = 0;
 
 // [26] Filtro de volatilidad extrema
-bool     volatilityBlocked     = false;
 
 // [27] Periodo de gracia del kill switch
 bool     killSwitchPending     = false;   // true mientras la pérdida diaria está en periodo de gracia
 datetime killSwitchGraceStart  = 0;       // instante en que se detectó la pérdida por primera vez
+
+// [27.7] Contador de fallos de apertura (grid o cobertura) — expuesto en OnTester()
+// para verlo directamente en la columna "Custom" del optimizador, sin abrir logs.
+int      marginFailureCount    = 0;
 
 // Estado general
 CTrade   trade;
@@ -237,6 +234,15 @@ double   dailyStartBalance     = 0.0;
 double   realizedLoss          = 0.0;
 double   effectiveMaxDailyLoss = 0.0;
 datetime lastStateSave         = 0;
+
+// [31] Escalado automático — valores EFECTIVOS que usa el resto del código.
+// En modo manual (UseAutoScaling=false) son copia directa de los inputs.
+// En modo automático, los recalcula ApplyScalingTier() según el balance,
+// y solo se aplican cuando el grid está completamente vacío.
+double   effFixedContractSize  = 0.0;
+double   effUnwindLotSize      = 0.0;
+int      effMaxGridPositions   = 0;
+int      scalingWaitCounter    = 0;
 
 // ATR
 int      atrHandle             = INVALID_HANDLE;
@@ -306,12 +312,9 @@ double CalculateHurst(int period)
 }
 
 // [v3.91] Devuelve true si el grid puede abrir en la dirección indicada
-// Considera: GridDirection, UseHurstFilter y [26] filtro de volatilidad
+// Considera: GridDirection y UseHurstFilter
 bool GridCanOpen(int direction) // 1=BUY, -1=SELL (interno)
 {
-   // [26] Filtro de volatilidad extrema — máxima prioridad, bloquea cualquier apertura nueva
-   if(volatilityBlocked) return false;
-
    // Filtro de dirección: 0=bidireccional, 1=solo BUYs, 2=solo SELLs
    if(GridDirection == 1 && direction != 1)  return false;
    if(GridDirection == 2 && direction != -1) return false;
@@ -326,36 +329,6 @@ bool GridCanOpen(int direction) // 1=BUY, -1=SELL (interno)
       return false;
    }
    return true;
-}
-
-// [26] Compara el ATR actual contra la media de ATR de referencia reciente.
-// Si el ATR actual la supera en VolatilityATRMultiple veces, se considera
-// volatilidad extrema y se bloquean nuevas aperturas de grid.
-// Solo actúa sobre APERTURAS nuevas — no cierra ni protege posiciones ya abiertas.
-bool IsVolatilityExtreme()
-{
-   if(!UseVolatilityFilter) return false;
-   if(currentATR <= 0.0) return false;
-   if(VolatilityRefPeriod < 2) return false;
-
-   double refBuf[];
-   ArraySetAsSeries(refBuf, true);
-   // Shift=1: excluye la barra actual, usa solo barras cerradas previas como referencia
-   int copied = CopyBuffer(atrHandle, 0, 1, VolatilityRefPeriod, refBuf);
-   if(copied < VolatilityRefPeriod) return false; // datos insuficientes: no bloquear por precaución
-
-   double sum = 0.0;
-   for(int i = 0; i < copied; i++) sum += refBuf[i];
-   double refATR = sum / copied;
-   if(refATR <= 0.0) return false;
-
-   bool extreme = (currentATR > VolatilityATRMultiple * refATR);
-   if(extreme && barsInCurrentState % 12 == 0)
-      Print("FILTRO VOLATILIDAD: ATR actual=", DoubleToString(currentATR, 5),
-            " > ", DoubleToString(VolatilityATRMultiple, 1), "x referencia (",
-            DoubleToString(refATR, 5), ") | Ref=", VolatilityRefPeriod, " barras",
-            " → nuevas aperturas bloqueadas");
-   return extreme;
 }
 
 // [26] FIFO: cierra la posición del grid más antigua si supera FIFOMaxDaysOpen días,
@@ -382,6 +355,15 @@ void CheckFIFOTimeLimit()
       if(PositionGetString(POSITION_SYMBOL) != _Symbol) continue;
       if(IsPreExisting(ticket) || IsUnwindPosition(ticket)) continue;
       if(StringFind(PositionGetString(POSITION_COMMENT), "Level") < 0) continue;
+
+      // [27.8] No forzar por FIFO una posición que ya tiene una cobertura activa
+      // trabajando en fase 1 — cerrarla por fuera rompería el emparejamiento sin
+      // que se calcule gridRealizedLoss ni se aplique el lock-in de la cobertura.
+      bool hasActiveHedge = false;
+      for(int p = 0; p < unwindPairCount; p++)
+         if(unwindPairs[p].active && !unwindPairs[p].gridClosed && unwindPairs[p].gridTicket == ticket)
+            { hasActiveHedge = true; break; }
+      if(hasActiveHedge) continue;
 
       datetime openTime = (datetime)PositionGetInteger(POSITION_TIME);
       if(oldestTicket == 0 || openTime < oldestTime)
@@ -414,7 +396,175 @@ void CheckFIFOTimeLimit()
    }
 }
 
-// [v3.91] Alerta push cuando el grid lleva mucho tiempo pausado con pérdida significativa
+//+------------------------------------------------------------------+
+//  [31] ESCALADO AUTOMÁTICO
+//  Tabla validada con backtests reales contra el evento de abril 2025 y el
+//  histórico 2020-2026: hasta 2000 USD escala el NÚMERO de posiciones
+//  (166.67 USD de margen por posición, lote fijo en 0.01/0.04). Desde 2000
+//  USD, el número de posiciones queda fijo en 12 (confirmado: 12 supera a
+//  24 en beneficio, drawdown y factor de recuperación) y en su lugar escala
+//  el LOTE, +0.01/+0.04 cada 2000 USD adicionales.
+//+------------------------------------------------------------------+
+
+// Calcula el escalón que correspondería al balance dado, sin aplicar nada todavía.
+void ComputeScalingTargets(double balance, int &outPositions, double &outContractSize, double &outUnwindLot)
+{
+   if(balance < 2000.0)
+   {
+      int pos = (int)MathFloor(balance * 6.0 / 1000.0 + 0.0001);  // 1000→6, 2000→12
+      if(pos < 1) pos = 1;
+      outPositions    = pos;
+      outContractSize = 0.01;
+      outUnwindLot    = 0.04;
+   }
+   else
+   {
+      int tier = (int)MathFloor(balance / 2000.0 + 0.0001);       // 2000-3999→1, 4000-5999→2...
+      if(tier < 1) tier = 1;
+      outPositions    = 12;
+      outContractSize = 0.01 * tier;
+      outUnwindLot     = 0.04 * tier;
+   }
+}
+
+// Recalcula effectiveMaxDailyLoss a partir de MaxDailyLoss/SafetyBeltFactor y del
+// lote EFECTIVO actual. Hay que llamarla de nuevo cada vez que effFixedContractSize
+// cambie (no solo una vez en OnInit), para que el kill switch escale con el lote real.
+void RecomputeEffectiveDailyLoss()
+{
+   effectiveMaxDailyLoss = (SafetyBeltFactor > 0.0 && SafetyBeltFactor <= 1.0)
+                           ? MaxDailyLoss * SafetyBeltFactor
+                           : MaxDailyLoss * 0.95;
+
+   if(UnwindFastTrackRefLot > 0.0)
+      effectiveMaxDailyLoss *= (effFixedContractSize / UnwindFastTrackRefLot);
+}
+
+// Se llama una vez desde OnInit. Fija los valores efectivos de partida: en modo
+// manual, copia directa de los inputs; en modo automático, el escalón que
+// corresponde al balance actual.
+void InitScalingVariables()
+{
+   if(UseAutoScaling)
+   {
+      int    pos; double cs; double ul;
+      ComputeScalingTargets(AccountInfoDouble(ACCOUNT_BALANCE), pos, cs, ul);
+      effMaxGridPositions  = pos;
+      effFixedContractSize = cs;
+      effUnwindLotSize     = ul;
+      Print("[31-ESCALADO] Modo automático activo | Balance=",
+            DoubleToString(AccountInfoDouble(ACCOUNT_BALANCE), 2),
+            " → Posiciones=", effMaxGridPositions,
+            " | Lote grid=", DoubleToString(effFixedContractSize, 2),
+            " | Lote cobertura=", DoubleToString(effUnwindLotSize, 2));
+   }
+   else
+   {
+      effMaxGridPositions  = MaxGridPositions;
+      effFixedContractSize = FixedContractSize;
+      effUnwindLotSize     = UnwindLotSize;
+   }
+   RecomputeEffectiveDailyLoss();
+}
+
+// Se llama cada barra nueva. Si el balance sugiere un escalón distinto del actual,
+// solo lo aplica cuando el grid está completamente vacío (sin posiciones ni parejas
+// de cobertura abiertas) — igual que el recálculo de centro — para no romper el
+// cálculo del lock-in de coberturas abiertas con el lote anterior.
+void CheckAutoScaling()
+{
+   if(!UseAutoScaling) return;
+
+   double balance = AccountInfoDouble(ACCOUNT_BALANCE);
+   int    targetPositions; double targetContractSize; double targetUnwindLot;
+   ComputeScalingTargets(balance, targetPositions, targetContractSize, targetUnwindLot);
+
+   bool tierDiffers = (targetPositions != effMaxGridPositions ||
+                        MathAbs(targetContractSize - effFixedContractSize) > 0.0001);
+   if(!tierDiffers) { scalingWaitCounter = 0; return; }
+
+   bool gridEmpty = (!HasOpenGridPositions() && unwindPairCount == 0);
+
+   if(!gridEmpty)
+   {
+      scalingWaitCounter++;
+      if(scalingWaitCounter % 24 == 1)   // avisar ~una vez al día en H1, no cada barra
+         Print("[31-ESCALADO] Balance=", DoubleToString(balance, 2),
+               " sugiere nuevo escalón (", targetPositions, " pos / lote ",
+               DoubleToString(targetContractSize, 2),
+               ") pero el grid no está vacío — esperando a liberarse para aplicarlo.");
+      return;
+   }
+
+   effMaxGridPositions  = targetPositions;
+   effFixedContractSize = targetContractSize;
+   effUnwindLotSize     = targetUnwindLot;
+   RecomputeEffectiveDailyLoss();
+   scalingWaitCounter = 0;
+
+   Print("[31-ESCALADO] Nuevo escalón aplicado (grid vacío) | Balance=", DoubleToString(balance, 2),
+         " | Posiciones=", effMaxGridPositions,
+         " | Lote grid=", DoubleToString(effFixedContractSize, 2),
+         " | Lote cobertura=", DoubleToString(effUnwindLotSize, 2),
+         " | MaxDailyLoss efectivo=", DoubleToString(effectiveMaxDailyLoss, 2));
+}
+
+// [27.2] Imprime cada barra el estado de TODAS las puertas que pueden bloquear una
+// apertura de grid. No modifica ningún comportamiento — es solo observación.
+void LogDiagnostics()
+{
+   if(!UseDiagnosticLog) return;
+
+   Print("[DIAG] botActive=", botActive,
+         " | isInitialized=", isInitialized,
+         " | tradingDisabled=", tradingDisabled,
+         " | gridState=", (gridState == GRID_ACTIVE ? "ACTIVO" : "PAUSADO"),
+         " | centerQualityScore=", DoubleToString(centerQualityScore, 2),
+         " (mín=", DoubleToString(CenterMinQualityScore, 2), ")",
+         " | UseHurstFilter=", UseHurstFilter,
+         (UseHurstFilter ? " (H=" + DoubleToString(currentHurst, 3) + ")" : ""),
+         " | GridDirection=", GridDirection,
+         " | CountGridPositions=", CountGridPositions(), "/", effMaxGridPositions,
+         " | LoteGrid=", DoubleToString(effFixedContractSize, 2),
+         " | LoteCobertura=", DoubleToString(effUnwindLotSize, 2),
+         " | recalcPending=", recalcPending,
+         " | Precio=", DoubleToString(SymbolInfoDouble(_Symbol, SYMBOL_BID), _Digits),
+         " | Centro=", DoubleToString(centralPoint, _Digits));
+}
+
+// [27.2] Imprime cada barra el estado de CADA par de cobertura activo: pérdida del
+// grid, beneficio de la TF, suma, SL actual y fase. Solo observación, no actúa.
+void LogUnwindVerbose()
+{
+   if(!UseVerboseUnwindLog) return;
+   if(unwindPairCount == 0) return;
+
+   for(int i = 0; i < unwindPairCount; i++)
+   {
+      if(!unwindPairs[i].active) continue;
+
+      double gridP = 0.0; bool gridOk = false;
+      double tfP   = 0.0; bool tfOk   = false;
+      double tfSL  = 0.0;
+
+      for(int j = PositionsTotal() - 1; j >= 0; j--)
+      {
+         ulong t = PositionGetTicket(j);
+         if(t == unwindPairs[i].gridTicket) { gridP = PositionGetDouble(POSITION_PROFIT); gridOk = true; }
+         if(t == unwindPairs[i].tfTicket)   { tfP = PositionGetDouble(POSITION_PROFIT); tfSL = PositionGetDouble(POSITION_SL); tfOk = true; }
+      }
+
+      Print("[UNWIND-DIAG] Par #", unwindPairs[i].pairId,
+            " | Fase=", (unwindPairs[i].gridClosed ? "2" : "1"),
+            " | Grid=", (gridOk ? DoubleToString(gridP, 2) : "cerrado"),
+            " | TF=", (tfOk ? DoubleToString(tfP, 2) : "cerrada"),
+            " | Suma=", (gridOk && tfOk ? DoubleToString(gridP + tfP, 2) : "n/a"),
+            " | SL_TF=", (tfOk ? DoubleToString(tfSL, _Digits) : "n/a"),
+            " | gridRealizedLoss=", DoubleToString(unwindPairs[i].gridRealizedLoss, 2));
+   }
+}
+
+
 void CheckManualAlert()
 {
    if(!UseManualAlert) return;
@@ -442,7 +592,7 @@ void CheckManualAlert()
 
    // Enviar alerta
    string msg = StringFormat(
-      "⚠️ MECHA-GODZILLA 27 | %s\n"
+      "⚠️ MECHA-GODZILLA 31 | %s\n"
       "Grid pausado: %d barras\n"
       "Pérdida flotante: -%.2f USD\n"
       "→ Considerar gestión manual",
@@ -772,7 +922,7 @@ int CountUnpairedTrappedPositions()
 // detiene el bot limpiamente — ese es el mecanismo correcto.
 double GetEffectiveLotSize()
 {
-   return UnwindLotSize;
+   return effUnwindLotSize;
 }
 
 bool OpenUnwindTF(int direction)
@@ -822,6 +972,7 @@ bool OpenUnwindTF(int direction)
    if(!success)
    {
       Print("UNWIND TF: Fallo al abrir. Error=", GetLastError());
+      marginFailureCount++;
       return false;
    }
 
@@ -1206,6 +1357,13 @@ void ManageUnwinding()
       ? AccountInfoDouble(ACCOUNT_BALANCE) * UnwindFastTrackPct / 100.0
       : UnwindFastTrackLossUSD;
 
+   // [27.6] Escalar el umbral por la proporción entre el lote de grid ACTUAL y el
+   // lote de referencia (0.01, el histórico validado). Con el lote sin cambiar respecto
+   // al histórico, este factor es 1.0 — el umbral no se mueve con el balance, solo con
+   // el lote, que es la variable de la que depende de verdad la pérdida flotante real.
+   if(UnwindFastTrackRefLot > 0.0)
+      effectiveFastTrackUSD *= (effFixedContractSize / UnwindFastTrackRefLot);
+
    if(effectiveFastTrackUSD > 0.0)
    {
       double totalFloating = 0.0;
@@ -1216,6 +1374,17 @@ void ManageUnwinding()
          if(IsPreExisting(t) || IsUnwindPosition(t)) continue;
          totalFloating += PositionGetDouble(POSITION_PROFIT);
       }
+
+      // [27.3] Diagnóstico: mostrar el estado del umbral aunque todavía no se cruce.
+      // Antes esto era completamente mudo si totalFloating no llegaba al umbral.
+      if(UseVerboseUnwindLog && barsInCurrentState % 6 == 0)
+         Print("[UNWIND-DIAG] Umbral fast-track: flotante=", DoubleToString(totalFloating, 2),
+               " USD | umbral=-", DoubleToString(effectiveFastTrackUSD, 2),
+               " USD (", DoubleToString(UnwindFastTrackPct, 1), "% de balance=",
+               DoubleToString(AccountInfoDouble(ACCOUNT_BALANCE), 2),
+               " × lote ", DoubleToString(effFixedContractSize, 2), "/", DoubleToString(UnwindFastTrackRefLot, 2),
+               ") | Sin cubrir=", unpairedCount,
+               " | ", (totalFloating <= -effectiveFastTrackUSD ? "UMBRAL CRUZADO" : "aún no llega"));
 
       if(totalFloating <= -effectiveFastTrackUSD &&
          barsInCurrentState >= UnwindFastTrackMinBars)
@@ -1660,15 +1829,22 @@ void ManageBuyPositions(double currentPrice)
                          highestBuyLevel < i    || highestBuyLevel == i + 1 ||
                          (i < MaxGridLevels - 1 && levelClosedBuy[i+1]));
          if(!canOpen) continue;
-         if(LimitGridPositions && CountGridPositions() >= MaxGridPositions) continue;
+         if(LimitGridPositions && CountGridPositions() >= effMaxGridPositions) continue;
 
          double sl = CalcSL(POSITION_TYPE_BUY, i);
-         if(trade.Buy(FixedContractSize, _Symbol, 0, sl, 0,
+         if(trade.Buy(effFixedContractSize, _Symbol, 0, sl, 0,
                       "Buy Level " + IntegerToString(i)))
          {
             levelClosedBuy[i] = false;
             additionalPositionsOpenedBuy[i] = 0;
-            Print("BUY L", i, " @ ", DoubleToString(currentPrice, _Digits));
+            Print("BUY L", i, " @ ", DoubleToString(currentPrice, _Digits),
+                  " | motivo=cruce de nivel | lote=", DoubleToString(effFixedContractSize, 2));
+         }
+         else
+         {
+            Print("GRID: Fallo al abrir BUY L", i, " @ ", DoubleToString(currentPrice, _Digits),
+                  " | Error=", GetLastError(), " | Retcode=", trade.ResultRetcode());
+            marginFailureCount++;
          }
          break;
       }
@@ -1679,9 +1855,11 @@ void ManageBuyPositions(double currentPrice)
          double lp = GetLevelProfit(POSITION_TYPE_BUY, i);
          if(lp < MinProfitToClose) { break; }
 
+         double buyProfitAtClose = GetLevelProfit(POSITION_TYPE_BUY, i);
          ClosePosition(POSITION_TYPE_BUY, i);
-         Print("BUY CERRADO L", i, " | Balance=",
-               DoubleToString(AccountInfoDouble(ACCOUNT_BALANCE), 2));
+         Print("BUY CERRADO L", i, " | motivo=precio recuperado, beneficio>=", DoubleToString(MinProfitToClose,2),
+               " | beneficio=", DoubleToString(buyProfitAtClose, 2),
+               " | Balance=", DoubleToString(AccountInfoDouble(ACCOUNT_BALANCE), 2));
          levelClosedBuy[i] = true;
 
          if(gridState == GRID_ACTIVE)
@@ -1690,14 +1868,22 @@ void ManageBuyPositions(double currentPrice)
             if(posUpper < MaxPositionsPerLevel &&
                additionalPositionsOpenedBuy[i-1] < MaxPositionsPerLevel - 1)
             {
-               if(!LimitGridPositions || CountGridPositions() < MaxGridPositions)
+               if(!LimitGridPositions || CountGridPositions() < effMaxGridPositions)
                {
                   double sl2 = CalcSL(POSITION_TYPE_BUY, i-1);
-                  if(trade.Buy(FixedContractSize, _Symbol, 0, sl2, 0,
+                  if(trade.Buy(effFixedContractSize, _Symbol, 0, sl2, 0,
                                "Buy Level " + IntegerToString(i-1)))
                   {
                      levelClosedBuy[i-1] = false;
                      additionalPositionsOpenedBuy[i-1]++;
+                     Print("BUY L", i-1, " (adicional) | motivo=nivel superior liberado tras cierre | lote=",
+                           DoubleToString(effFixedContractSize, 2));
+                  }
+                  else
+                  {
+                     Print("GRID: Fallo al abrir BUY adicional L", i-1,
+                           " | Error=", GetLastError(), " | Retcode=", trade.ResultRetcode());
+                     marginFailureCount++;
                   }
                }
             }
@@ -1739,15 +1925,22 @@ void ManageSellPositions(double currentPrice)
                          highestSellLevel < i    || highestSellLevel == i + 1 ||
                          (i < MaxGridLevels - 1 && levelClosedSell[i+1]));
          if(!canOpen) continue;
-         if(LimitGridPositions && CountGridPositions() >= MaxGridPositions) continue;
+         if(LimitGridPositions && CountGridPositions() >= effMaxGridPositions) continue;
 
          double sl = CalcSL(POSITION_TYPE_SELL, i);
-         if(trade.Sell(FixedContractSize, _Symbol, 0, sl, 0,
+         if(trade.Sell(effFixedContractSize, _Symbol, 0, sl, 0,
                        "Sell Level " + IntegerToString(i)))
          {
             levelClosedSell[i] = false;
             additionalPositionsOpenedSell[i] = 0;
-            Print("SELL L", i, " @ ", DoubleToString(currentPrice, _Digits));
+            Print("SELL L", i, " @ ", DoubleToString(currentPrice, _Digits),
+                  " | motivo=cruce de nivel | lote=", DoubleToString(effFixedContractSize, 2));
+         }
+         else
+         {
+            Print("GRID: Fallo al abrir SELL L", i, " @ ", DoubleToString(currentPrice, _Digits),
+                  " | Error=", GetLastError(), " | Retcode=", trade.ResultRetcode());
+            marginFailureCount++;
          }
          break;
       }
@@ -1758,9 +1951,11 @@ void ManageSellPositions(double currentPrice)
          double lp = GetLevelProfit(POSITION_TYPE_SELL, i);
          if(lp < MinProfitToClose) { break; }
 
+         double sellProfitAtClose = GetLevelProfit(POSITION_TYPE_SELL, i);
          ClosePosition(POSITION_TYPE_SELL, i);
-         Print("SELL CERRADO L", i, " | Balance=",
-               DoubleToString(AccountInfoDouble(ACCOUNT_BALANCE), 2));
+         Print("SELL CERRADO L", i, " | motivo=precio recuperado, beneficio>=", DoubleToString(MinProfitToClose,2),
+               " | beneficio=", DoubleToString(sellProfitAtClose, 2),
+               " | Balance=", DoubleToString(AccountInfoDouble(ACCOUNT_BALANCE), 2));
          levelClosedSell[i] = true;
 
          if(gridState == GRID_ACTIVE)
@@ -1769,14 +1964,22 @@ void ManageSellPositions(double currentPrice)
             if(posLower < MaxPositionsPerLevel &&
                additionalPositionsOpenedSell[i-1] < MaxPositionsPerLevel - 1)
             {
-               if(!LimitGridPositions || CountGridPositions() < MaxGridPositions)
+               if(!LimitGridPositions || CountGridPositions() < effMaxGridPositions)
                {
                   double sl2 = CalcSL(POSITION_TYPE_SELL, i-1);
-                  if(trade.Sell(FixedContractSize, _Symbol, 0, sl2, 0,
+                  if(trade.Sell(effFixedContractSize, _Symbol, 0, sl2, 0,
                                 "Sell Level " + IntegerToString(i-1)))
                   {
                      levelClosedSell[i-1] = false;
                      additionalPositionsOpenedSell[i-1]++;
+                     Print("SELL L", i-1, " (adicional) | motivo=nivel inferior liberado tras cierre | lote=",
+                           DoubleToString(effFixedContractSize, 2));
+                  }
+                  else
+                  {
+                     Print("GRID: Fallo al abrir SELL adicional L", i-1,
+                           " | Error=", GetLastError(), " | Retcode=", trade.ResultRetcode());
+                     marginFailureCount++;
                   }
                }
             }
@@ -1972,20 +2175,19 @@ int OnInit()
       Print("Error: PauseMultiplier debe ser > ResumeMultiplier");
       return INIT_PARAMETERS_INCORRECT;
    }
-   if((UseUnwindFastTrack || UseUnwindNormalMode) && UnwindLotSize < FixedContractSize)
-      Print("Aviso: UnwindLotSize < FixedContractSize. El unwinding puede ser lento.");
+
+   // [31] Fija los valores efectivos de partida (manuales o el escalón inicial
+   // del escalado automático) antes de cualquier aviso o cálculo que los use.
+   InitScalingVariables();
+
+   if((UseUnwindFastTrack || UseUnwindNormalMode) && effUnwindLotSize < effFixedContractSize)
+      Print("Aviso: UnwindLotSize < FixedContractSize (valores efectivos). El unwinding puede ser lento.");
    if(UnwindFastTrackLossUSD > 0.0 && UnwindFastTrackLossUSD >= MaxDailyLoss)
       Print("Aviso: UnwindFastTrackLossUSD >= MaxDailyLoss. El fast-track nunca se activará antes del kill switch.");
    if(UseFIFOTimeLimit && FIFOMaxDaysOpen <= 0)
       Print("Aviso: FIFOMaxDaysOpen <= 0 con UseFIFOTimeLimit=true. El FIFO no hará nada.");
-   if(UseVolatilityFilter && VolatilityRefPeriod < 5)
-      Print("Aviso: VolatilityRefPeriod muy bajo — la referencia de ATR puede ser inestable.");
    if(UnwindGraceBars <= 0)
       Print("Aviso: UnwindGraceBars <= 0 → comportamiento idéntico a v26 (kill switch inmediato, sin margen para coberturas).");
-
-   effectiveMaxDailyLoss = (SafetyBeltFactor > 0.0 && SafetyBeltFactor <= 1.0)
-                           ? MaxDailyLoss * SafetyBeltFactor
-                           : MaxDailyLoss * 0.95;
 
    atrHandle = iATR(_Symbol, Timeframe, AtrPeriod);
    if(atrHandle == INVALID_HANDLE)
@@ -2032,10 +2234,13 @@ int OnInit()
             " | Score=", DoubleToString(centerQualityScore, 2),
             " | Unwinding=", (UseUnwindFastTrack || UseUnwindNormalMode ? "ON" : "OFF"),
             " | FIFO=", (UseFIFOTimeLimit ? IntegerToString(FIFOMaxDaysOpen) + "d/" + IntegerToString(FIFOCloseIntervalDays) + "d" : "OFF"),
-            " | FiltroVol=", (UseVolatilityFilter ? DoubleToString(VolatilityATRMultiple,1) + "x" : "OFF"),
             " | GraciaKillSwitch=", (UnwindGraceBars > 0 ? IntegerToString(UnwindGraceBars) + " barras" : "OFF"),
             " | FastTrack=", (UnwindFastTrackLossUSD > 0 ?
-               DoubleToString(UnwindFastTrackLossUSD, 0) + " USD → batch inmediato" : "OFF"));
+               DoubleToString(UnwindFastTrackLossUSD, 0) + " USD → batch inmediato" : "OFF"),
+            " | Escalado=", (UseAutoScaling ? "AUTO" : "MANUAL"),
+            " | Posiciones=", effMaxGridPositions,
+            " | LoteGrid=", DoubleToString(effFixedContractSize, 2),
+            " | LoteCobertura=", DoubleToString(effUnwindLotSize, 2));
 
       // Intentar dibujar el grid inmediatamente aunque BuildGrid haya fallado por ATR
       // Calculamos ATR directamente desde el buffer si el handle ya tiene datos
@@ -2080,6 +2285,16 @@ void OnDeinit(const int reason)
 }
 
 //+------------------------------------------------------------------+
+//  [27.7] OnTester — expone marginFailureCount en la columna "Custom"
+//  del informe del optimizador, para localizar el techo de margen sin
+//  tener que abrir el log de cada pasada.
+//+------------------------------------------------------------------+
+double OnTester()
+{
+   return (double)marginFailureCount;
+}
+
+//+------------------------------------------------------------------+
 //  OnTick
 //+------------------------------------------------------------------+
 void OnTick()
@@ -2107,8 +2322,6 @@ void OnTick()
          currentHurst = CalculateHurst(HurstPeriod);
 
       // [26] Actualizar el flag de volatilidad extrema una vez por barra
-      volatilityBlocked = UseVolatilityFilter ? IsVolatilityExtreme() : false;
-
       UpdateGridGuard();
       ManageUnwinding();
       CheckManualAlert();
@@ -2117,6 +2330,13 @@ void OnTick()
       // Se ejecuta independientemente del gridState — el objetivo es liberar
       // cupo cuanto antes, esté el grid activo o pausado.
       CheckFIFOTimeLimit();
+
+      // [31] Escalado automático — solo aplica cambios cuando el grid está vacío
+      CheckAutoScaling();
+
+      // [27.2] Diagnóstico — no afecta a ninguna decisión de trading
+      LogDiagnostics();
+      LogUnwindVerbose();
 
       // Redibujar líneas del grid en cada barra nueva (fix para live trading)
       if(isInitialized && centralPoint > 0.0)
@@ -2156,48 +2376,57 @@ void OnTick()
 
    bool dailyLossBreached = (CalculateTotalDailyLoss() <= -effectiveMaxDailyLoss);
 
-   if(dailyLossBreached)
+   // [27.1] ¿Hay pares de cobertura en FASE 1 (cobertura abierta, grid aún sin cerrar)?
+   bool hasPhase1Pairs = false;
+   for(int i = 0; i < unwindPairCount; i++)
+      if(unwindPairs[i].active && !unwindPairs[i].gridClosed) { hasPhase1Pairs = true; break; }
+
+   if(killSwitchPending)
    {
-      // [27] ¿Hay pares de cobertura en FASE 1 (cobertura abierta, grid aún sin cerrar)?
-      // Si es así, merecen un margen de reacción antes de liquidarlos sin darles ninguna oportunidad.
-      bool hasPhase1Pairs = false;
-      for(int i = 0; i < unwindPairCount; i++)
-         if(unwindPairs[i].active && !unwindPairs[i].gridClosed) { hasPhase1Pairs = true; break; }
+      // [27.1 FIX] Ya hay un periodo de gracia en curso. NO lo reiniciamos ni lo cancelamos
+      // por una fluctuación momentánea de la pérdida flotante (bug de v27.0: el reloj se
+      // reiniciaba en cada oscilación y nunca llegaba a completar el plazo real).
+      // Solo se resuelve cuando expira el plazo o cuando ya no quedan pares que proteger.
+      int barsSinceTrigger = (int)((TimeCurrent() - killSwitchGraceStart) / PeriodSeconds(Timeframe));
+      bool graceExpired    = (barsSinceTrigger >= UnwindGraceBars);
 
-      bool graceActive = false;
-
+      if(!hasPhase1Pairs || graceExpired)
+      {
+         if(dailyLossBreached)
+         {
+            CloseAllPositions();
+            tradingDisabled   = true;
+            killSwitchPending = false;
+            Print("PÉRDIDA DIARIA (tras periodo de gracia de ", barsSinceTrigger,
+                  " barras) | Balance=", DoubleToString(balance, 2));
+            return;
+         }
+         else
+         {
+            Print("[27] PÉRDIDA DIARIA despejada tras ", barsSinceTrigger,
+                  " barras de gracia — coberturas compensaron a tiempo.");
+            killSwitchPending = false;
+         }
+      }
+      // Si no ha expirado el plazo y aún quedan pares en fase 1, seguimos esperando sin más acción.
+   }
+   else if(dailyLossBreached)
+   {
       if(hasPhase1Pairs && UnwindGraceBars > 0)
       {
-         if(!killSwitchPending)
-         {
-            killSwitchPending    = true;
-            killSwitchGraceStart = TimeCurrent();
-            Print("[27] PÉRDIDA DIARIA con coberturas en fase 1 activas → concediendo ",
-                  UnwindGraceBars, " barras de margen antes de liquidar | Balance=",
-                  DoubleToString(balance, 2));
-         }
-
-         int barsSinceTrigger = (int)((TimeCurrent() - killSwitchGraceStart) / PeriodSeconds(Timeframe));
-         graceActive = (barsSinceTrigger < UnwindGraceBars);
+         killSwitchPending    = true;
+         killSwitchGraceStart = TimeCurrent();
+         Print("[27] PÉRDIDA DIARIA con coberturas en fase 1 activas → concediendo ",
+               UnwindGraceBars, " barras de margen antes de liquidar | Balance=",
+               DoubleToString(balance, 2));
       }
-
-      if(!graceActive)
+      else
       {
-         // Se acabó el margen (o no había coberturas que lo justifiquen): liquidar como en v26.
          CloseAllPositions();
-         tradingDisabled   = true;
-         killSwitchPending = false;
+         tradingDisabled = true;
          Print("PÉRDIDA DIARIA | Balance=", DoubleToString(balance, 2));
          return;
       }
-      // graceActive == true: NO liquidamos. El resto de OnTick sigue con normalidad
-      // para que ManageUnwindPairs/trailing puedan seguir gestionando la cascada.
-   }
-   else if(killSwitchPending)
-   {
-      // La pérdida se despejó dentro del plazo de gracia: las coberturas hicieron su trabajo a tiempo.
-      killSwitchPending = false;
-      Print("[27] PÉRDIDA DIARIA despejada dentro del periodo de gracia — coberturas compensaron a tiempo.");
    }
 
    if(tradingDisabled) return;
