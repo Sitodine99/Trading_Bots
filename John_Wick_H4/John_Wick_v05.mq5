@@ -5,7 +5,23 @@
 //+------------------------------------------------------------------+
 #property copyright "Jose Antonio Montero"
 #property link      "https://www.linkedin.com/in/joseamontero/"
-#property version   "3.20"
+#property version   "3.30"
+//
+// CHANGELOG v3.20 -> v3.30
+// - PERSISTENCIA ANTE REINICIO (corte de luz, reinicio del PC/VPS, cierre de MT5 el fin de
+//   semana, etc.). Las posiciones abiertas SIEMPRE sobreviven un reinicio porque viven en el
+//   servidor del broker, no en el PC -- eso nunca ha sido un problema. Lo que SI se perdia hasta
+//   ahora al reiniciar OnInit():
+//     1) last_buy_time / last_sell_time se reseteaban a 0 en cada arranque, anulando de golpe
+//        la proteccion CandleSeparation (separacion minima de velas entre operaciones en la
+//        misma direccion) justo despues de un reinicio.
+//     2) daily_start_balance / last_day_reset / trading_disabled se reseteaban a "dia nuevo"
+//        sin importar la hora real, perdiendo la cuenta de perdidas ya registradas ese dia y
+//        pudiendo reactivar el trading tras un parón por perdida diaria maxima aunque siguieran
+//        vigentes las condiciones que lo dispararon.
+//   Ahora los tres se guardan en Variables Globales de terminal (persisten en disco y
+//   sobreviven a reinicios) y OnInit() los restaura en vez de resetearlos. Solo se inicializan
+//   "de cero" la primera vez que el EA se ejecuta en esta cuenta/simbolo.
 //
 // CHANGELOG v3.10 -> v3.20
 // - El antiguo aviso unico PuntosAlertaAdversa (750) se sustituye por un sistema de 4 niveles,
@@ -193,6 +209,16 @@ double GVGetOrZero(string name)
    if(GlobalVariableCheck(name))
       return GlobalVariableGet(name);
    return 0.0;
+}
+
+//+------------------------------------------------------------------+
+//| Activar/desactivar el trading, persistiendo el estado en una       |
+//| Variable Global para que sobreviva a un reinicio de la plataforma  |
+//+------------------------------------------------------------------+
+void SetTradingDisabled(bool value)
+{
+   trading_disabled = value;
+   GlobalVariableSet(GVPrefix() + "TradingDisabled", value ? 1.0 : 0.0);
 }
 
 //+------------------------------------------------------------------+
@@ -390,15 +416,44 @@ int OnInit()
    ArraySetAsSeries(bb_lower, true);
    ArraySetAsSeries(bb_mid, true);
 
-   last_buy_time = 0;
-   last_sell_time = 0;
+   // --- Restaurar estado persistente (sobrevive a reinicios de la plataforma) ---
+   string gv_last_buy    = GVPrefix() + "LastBuyTime";
+   string gv_last_sell   = GVPrefix() + "LastSellTime";
+   string gv_daily_bal   = GVPrefix() + "DailyStartBalance";
+   string gv_daily_reset = GVPrefix() + "LastDayReset";
+   string gv_disabled    = GVPrefix() + "TradingDisabled";
+
+   last_buy_time  = (datetime)GVGetOrZero(gv_last_buy);
+   last_sell_time = (datetime)GVGetOrZero(gv_last_sell);
 
    CheckAutoScaling(true);
 
-   daily_start_balance = AccountInfoDouble(ACCOUNT_BALANCE);
-   last_day_reset = TimeCurrent();
-   realized_loss = 0.0;
-   trading_disabled = false;
+   if(GlobalVariableCheck(gv_daily_bal) && GlobalVariableCheck(gv_daily_reset))
+   {
+      // Ya habia estado guardado de una ejecucion anterior: retomar el dia en curso tal
+      // como estaba, en vez de empezar un "dia nuevo" falso por culpa del reinicio.
+      daily_start_balance = GlobalVariableGet(gv_daily_bal);
+      last_day_reset = (datetime)GlobalVariableGet(gv_daily_reset);
+      trading_disabled = (GVGetOrZero(gv_disabled) >= 1.0);
+      Print("♻️ ESTADO RECUPERADO TRAS REINICIO: Balance inicio de día = $", DoubleToString(daily_start_balance, 2),
+            " | Último reseteo diario = ", TimeToString(last_day_reset, TIME_DATE|TIME_MINUTES),
+            " | Trading disabled = ", trading_disabled,
+            " | Última compra = ", (last_buy_time > 0 ? TimeToString(last_buy_time, TIME_DATE|TIME_MINUTES) : "ninguna"),
+            " | Última venta = ", (last_sell_time > 0 ? TimeToString(last_sell_time, TIME_DATE|TIME_MINUTES) : "ninguna"));
+   }
+   else
+   {
+      // Primera vez que este EA corre en esta cuenta/símbolo: inicializar de cero
+      daily_start_balance = AccountInfoDouble(ACCOUNT_BALANCE);
+      last_day_reset = TimeCurrent();
+      trading_disabled = false;
+      GlobalVariableSet(gv_daily_bal, daily_start_balance);
+      GlobalVariableSet(gv_daily_reset, (double)last_day_reset);
+      GlobalVariableSet(gv_disabled, 0.0);
+      Print("🆕 PRIMERA EJECUCIÓN: Balance inicial de día = $", DoubleToString(daily_start_balance, 2));
+   }
+   realized_loss = AccountInfoDouble(ACCOUNT_BALANCE) - daily_start_balance;
+
    if(SafetyBeltFactor <= 0.0 || SafetyBeltFactor > 1.0)
    {
       effective_max_daily_loss = MaxDailyLossFTMO * 0.95;
@@ -468,7 +523,7 @@ void OnTick()
    if(UseBalanceTarget && BalanceTarget > 0 && current_balance >= BalanceTarget && current_equity >= BalanceTarget)
    {
       CloseAllPositions();
-      trading_disabled = true;
+      SetTradingDisabled(true);
       Print("🎯 OBJETIVO ALCANZADO: Balance = $", DoubleToString(current_balance, 2),
             " | Equity = $", DoubleToString(current_equity, 2), " | Trading detenido");
       return;
@@ -477,7 +532,7 @@ void OnTick()
    if(current_equity < MinOperatingBalance)
    {
       CloseAllPositions();
-      trading_disabled = true;
+      SetTradingDisabled(true);
       Print("🛑 PARADA: Equity = $", DoubleToString(current_equity, 2),
             " < Saldo mínimo ($", DoubleToString(MinOperatingBalance, 2), ") | Trading detenido");
       return;
@@ -487,7 +542,7 @@ void OnTick()
    if(total_daily_loss <= -effective_max_daily_loss)
    {
       CloseAllPositions();
-      trading_disabled = true;
+      SetTradingDisabled(true);
       Print("🚨 PÉRDIDA DIARIA MÁXIMA ALCANZADA: $", DoubleToString(total_daily_loss, 2),
             " | Trading detenido hasta reseteo diario");
       return;
@@ -893,6 +948,7 @@ void OpenSellTrade()
    if(trade.Sell(lot_size, _Symbol, ask, sl, tp))
    {
       last_sell_time = iTime(_Symbol, PERIOD_H4, 0);
+      GlobalVariableSet(GVPrefix() + "LastSellTime", (double)last_sell_time);
       CacheEntryCommission(trade.ResultOrder(), trade.ResultDeal());
       Print("📉 VENTA ABIERTA: Ticket #", trade.ResultOrder(),
             " | Lote: ", DoubleToString(lot_size, 2),
@@ -931,6 +987,7 @@ void OpenBuyTrade()
    if(trade.Buy(lot_size, _Symbol, bid, sl, tp))
    {
       last_buy_time = iTime(_Symbol, PERIOD_H4, 0);
+      GlobalVariableSet(GVPrefix() + "LastBuyTime", (double)last_buy_time);
       CacheEntryCommission(trade.ResultOrder(), trade.ResultDeal());
       Print("📈 COMPRA ABIERTA: Ticket #", trade.ResultOrder(),
             " | Lote: ", DoubleToString(lot_size, 2),
@@ -1267,13 +1324,17 @@ void CheckDailyReset()
       daily_start_balance = AccountInfoDouble(ACCOUNT_BALANCE);
       last_day_reset = utc_time;
       realized_loss = 0.0;
+      GlobalVariableSet(GVPrefix() + "DailyStartBalance", daily_start_balance);
+      GlobalVariableSet(GVPrefix() + "LastDayReset", (double)last_day_reset);
       Print("🔄 RESETEO DIARIO REALIZADO: Balance inicial = $", DoubleToString(daily_start_balance, 2));
       CleanupOrphanGlobals();
       if(trading_disabled)
       {
-         trading_disabled = false;
+         SetTradingDisabled(false);
          last_buy_time = 0;
          last_sell_time = 0;
+         GlobalVariableSet(GVPrefix() + "LastBuyTime", 0.0);
+         GlobalVariableSet(GVPrefix() + "LastSellTime", 0.0);
          Print("✅ TRADING REACTIVADO: Operaciones habilitadas a las 00:00 España");
       }
    }
@@ -1312,7 +1373,7 @@ void UpdatePanel()
       return;
 
    string prefix = GVPrefix();
-   string panel = "=== JOHN WICK H4 v3.20 (Magic " + IntegerToString(MagicNumber) + ") ===\n";
+   string panel = "=== JOHN WICK H4 v3.30 (Magic " + IntegerToString(MagicNumber) + ") ===\n";
    panel += "Trading: " + (trading_disabled ? "DETENIDO" : "ACTIVO") +
             " | Lote base: " + DoubleToString(base_lot_size, 2) +
             " | SinStops: " + (SinStops ? "SI" : "NO") + "\n";
